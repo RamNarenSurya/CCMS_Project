@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>College Complaint Management System</title>
+  <meta name="description" content="Centralized digital complaint tracking and resolution platform for students, staff, and college administrators.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="dark-theme">
+
+  <!-- Header Navigation -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand">
+        <div class="logo-icon">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <div class="brand-text">
+          <h1>Campus<span class="highlight">Resolve</span></h1>
+          <p class="subtitle">College Complaint Management Portal</p>
+        </div>
+      </div>
+
+      <!-- Demo Quick Login Bar -->
+      <div class="demo-login-bar">
+        <span class="demo-label"><i class="fa-solid fa-bolt"></i> Quick Switch:</span>
+        <button class="btn btn-demo student-demo" id="demoStudentBtn"><i class="fa-solid fa-user-graduate"></i> Student</button>
+        <button class="btn btn-demo admin-demo" id="demoAdminBtn"><i class="fa-solid fa-user-shield"></i> Admin</button>
+        <button class="btn btn-demo staff-demo" id="demoStaffBtn"><i class="fa-solid fa-user-gear"></i> Staff</button>
+      </div>
+
+      <div class="user-menu" id="userMenu">
+        <div class="user-info" id="userInfoDisplay" style="display:none;">
+          <span class="user-role-badge" id="userRoleBadge">Student</span>
+          <span class="user-name" id="userNameDisplay">Alex Johnson</span>
+          <button class="btn btn-icon btn-logout" id="logoutBtn" title="Logout">
+            <i class="fa-solid fa-right-from-bracket"></i>
+          </button>
+        </div>
+        <div class="auth-buttons" id="authNavButtons">
+          <button class="btn btn-outline" id="showLoginBtn"><i class="fa-solid fa-key"></i> Login</button>
+          <button class="btn btn-primary" id="showRegisterBtn"><i class="fa-solid fa-user-plus"></i> Register</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Application Wrapper -->
+  <main class="main-content">
+    <div class="content-container">
+
+      <!-- AUTH MODAL CONTAINER (Login / Register) -->
+      <div class="auth-card-wrapper" id="authCardWrapper" style="display:none;">
+        <div class="glass-card auth-card">
+          <!-- Auth Tabs -->
+          <div class="auth-tabs">
+            <button class="auth-tab active" id="tabLoginBtn">Login</button>
+            <button class="auth-tab" id="tabRegisterBtn">Student Registration</button>
+          </div>
+
+          <!-- Login Form -->
+          <form id="loginForm" class="auth-form active-form">
+            <h2>Welcome Back</h2>
+            <p class="form-desc">Sign in with your Email or Student/Staff ID</p>
+
+            <div class="form-group">
+              <label for="loginEmail"><i class="fa-solid fa-envelope"></i> Email or ID</label>
+              <input type="text" id="loginEmail" placeholder="student@college.edu or STU-2026-001" required>
+            </div>
+
+            <div class="form-group">
+              <label for="loginPassword"><i class="fa-solid fa-lock"></i> Password</label>
+              <input type="password" id="loginPassword" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block"><i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In</button>
+          </form>
+
+          <!-- Register Form -->
+          <form id="registerForm" class="auth-form" style="display:none;">
+            <h2>Create Student Account</h2>
+            <p class="form-desc">Register to submit and track college issues</p>
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="regName"><i class="fa-solid fa-user"></i> Full Name</label>
+                <input type="text" id="regName" placeholder="e.g. Alex Johnson" required>
+              </div>
+
+              <div class="form-group">
+                <label for="regStudentId"><i class="fa-solid fa-id-card"></i> Student ID</label>
+                <input type="text" id="regStudentId" placeholder="e.g. STU-2026-099">
+              </div>
+
+              <div class="form-group">
+                <label for="regEmail"><i class="fa-solid fa-envelope"></i> College Email</label>
+                <input type="email" id="regEmail" placeholder="alex@college.edu" required>
+              </div>
+
+              <div class="form-group">
+                <label for="regPhone"><i class="fa-solid fa-phone"></i> Phone Number</label>
+                <input type="tel" id="regPhone" placeholder="+1 555-0199">
+              </div>
+
+              <div class="form-group">
+                <label for="regDept"><i class="fa-solid fa-building-columns"></i> Department</label>
+                <select id="regDept">
+                  <option value="Computer Science">Computer Science</option>
+                  <option value="Electrical Engineering">Electrical Engineering</option>
+                  <option value="Mechanical Engineering">Mechanical Engineering</option>
+                  <option value="Civil Engineering">Civil Engineering</option>
+                  <option value="Business Administration">Business Administration</option>
+                  <option value="Biotechnology">Biotechnology</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="regYear"><i class="fa-solid fa-calendar-days"></i> Academic Year</label>
+                <select id="regYear">
+                  <option value="1st Year">1st Year</option>
+                  <option value="2nd Year">2nd Year</option>
+                  <option value="3rd Year">3rd Year</option>
+                  <option value="4th Year">4th Year</option>
+                  <option value="Postgraduate">Postgraduate</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="regPassword"><i class="fa-solid fa-lock"></i> Password</label>
+              <input type="password" id="regPassword" placeholder="At least 6 characters" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block"><i class="fa-solid fa-user-plus"></i> Complete Registration</button>
+          </form>
+        </div>
+      </div>
+
+
+      <!-- STUDENT DASHBOARD VIEW -->
+      <section id="studentDashboard" class="dashboard-view" style="display:none;">
+        <div class="view-header">
+          <div>
+            <h2 class="view-title"><i class="fa-solid fa-chart-line"></i> Student Complaint Portal</h2>
+            <p class="view-subtitle">Track, submit, and manage all your campus issues</p>
+          </div>
+          <button class="btn btn-accent btn-lg" id="openNewComplaintBtn">
+            <i class="fa-solid fa-plus-circle"></i> Submit New Complaint
+          </button>
+        </div>
+
+        <!-- Metric Cards -->
+        <div class="metrics-grid">
+          <div class="glass-card metric-card card-total">
+            <div class="metric-icon"><i class="fa-solid fa-folder-open"></i></div>
+            <div class="metric-info">
+              <span class="metric-value" id="stuTotalCount">0</span>
+              <span class="metric-label">Total Submitted</span>
+            </div>
+          </div>
+
+          <div class="glass-card metric-card card-pending">
+            <div class="metric-icon"><i class="fa-solid fa-hourglass-half"></i></div>
+            <div class="metric-info">
+              <span class="metric-value" id="stuPendingCount">0</span>
+              <span class="metric-label">Pending Review</span>
+            </div>
+          </div>
+
+          <div class="glass-card metric-card card-progress">
+            <div class="metric-icon"><i class="fa-solid fa-spinner fa-spin"></i></div>
+            <div class="metric-info">
+              <span class="metric-value" id="stuProgressCount">0</span>
+              <span class="metric-label">In Progress</span>
+            </div>
+          </div>
+
+          <div class="glass-card metric-card card-resolved">
+            <div class="metric-icon"><i class="fa-solid fa-circle-check"></i></div>
+            <div class="metric-info">
+              <span class="metric-value" id="stuResolvedCount">0</span>
+              <span class="metric-label">Resolved</span>
+            </div>
+          </div>
+
+          <div class="glass-card metric-card card-closed">
+            <div class="metric-icon"><i class="fa-solid fa-box-archive"></i></div>
+            <div class="metric-info">
+              <span class="metric-value" id="stuClosedCount">0</span>
+              <span class="metric-label">Closed</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Student Complaints Section -->
+        <div class="glass-card table-section">
+          <div class="section-toolbar">
+            <h3><i class="fa-solid fa-list-check"></i> My Complaints History</h3>
+            <div class="toolbar-actions">
+              <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="stuSearchInput" placeholder="Search by ID, title, location...">
+              </div>
+              <select id="stuCategoryFilter" class="select-input">
+                <option value="All">All Categories</option>
+                <option value="Classroom">Classroom</option>
+                <option value="Laboratory">Laboratory</option>
+                <option value="Hostel">Hostel</option>
+                <option value="Wi-Fi / Internet">Wi-Fi / Internet</option>
+                <option value="Infrastructure">Infrastructure</option>
+                <option value="Transportation">Transportation</option>
+                <option value="Cleanliness">Cleanliness</option>
+                <option value="Electricity">Electricity</option>
+                <option value="Water Supply">Water Supply</option>
+                <option value="Library">Library</option>
+                <option value="Security">Security</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Complaint ID</th>
+                  <th>Title & Category</th>
+                  <th>Location</th>
+                  <th>Submitted Date</th>
+                  <th>Priority</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="studentComplaintsTableBody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ADMIN / STAFF DASHBOARD VIEW -->
+      <section id="adminDashboard" class="dashboard-view" style="display:none;">
+        <div class="view-header">
+          <div>
+            <h2 class="view-title"><i class="fa-solid fa-user-shield"></i> Administration & Operations Center</h2>
+            <p class="view-subtitle">Review, assign, track resolution progress, and analyze campus complaints</p>
+          </div>
+          <div class="view-badges">
+            <span class="badge badge-accent" id="adminRoleDisplay"><i class="fa-solid fa-shield"></i> Administrator</span>
+          </div>
+        </div>
+
+        <!-- Admin Metrics Overview -->
+        <div class="metrics-grid">
+          <div class="glass-card metric-card card-total">
+            <div class="metric-icon"><i class="fa-solid fa-layer-group"></i></div>
+            <div class="metric-info">
+              <span class="metric-value" id="admTotal">0</span>
+              <span class="metric-label">Total Complaints</span>
+            </div>
+          </div>
+
+          <div class="glass-card metric-card card-pending">
+            <div class="metric-icon"><i class="fa-solid fa-clock"></i></div>
+            <div class="metric-info">
+              <span class="metric-value" id="admSubmitted">0</span>
+              <span class="metric-label">New / Review</span>
+            </div>
+          </div>
+
+          <div class="glass-card metric-card card-progress">
+            <div class="metric-icon"><i class="fa-solid fa-gears fa-spin"></i></div>
+            <div class="metric-info">
+              <span class="metric-value" id="admInProgress">0</span>
+              <span class="metric-label">In Progress</span>
+            </div>
+          </div>
+
+          <div class="glass-card metric-card card-resolved">
+            <div class="metric-icon"><i class="fa-solid fa-check-double"></i></div>
+            <div class="metric-info">
+              <span class="metric-value" id="admResolved">0</span>
+              <span class="metric-label">Resolved / Closed</span>
+            </div>
+          </div>
+
+          <div class="glass-card metric-card card-critical">
+            <div class="metric-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <div class="metric-info">
+              <span class="metric-value" id="admCritical">0</span>
+              <span class="metric-label">Critical Issues</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Analytics Distribution Bar -->
+        <div class="glass-card analytics-panel">
+          <div class="analytics-header">
+            <h4><i class="fa-solid fa-chart-pie"></i> Resolution Rate: <span id="admResolutionRate" class="text-gradient">0%</span></h4>
+            <div class="dept-summary-chips" id="deptSummaryChips">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Admin Complaints Master Table -->
+        <div class="glass-card table-section">
+          <div class="section-toolbar">
+            <h3><i class="fa-solid fa-sliders"></i> Master Complaint Management</h3>
+            <div class="toolbar-actions grid-actions">
+              <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="admSearchInput" placeholder="Search ID, Student, Title...">
+              </div>
+
+              <select id="admStatusFilter" class="select-input">
+                <option value="All">All Statuses</option>
+                <option value="Submitted">Submitted</option>
+                <option value="Under Review">Under Review</option>
+                <option value="Assigned">Assigned</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Resolved">Resolved</option>
+                <option value="Closed">Closed</option>
+              </select>
+
+              <select id="admCategoryFilter" class="select-input">
+                <option value="All">All Categories</option>
+                <option value="Classroom">Classroom</option>
+                <option value="Laboratory">Laboratory</option>
+                <option value="Hostel">Hostel</option>
+                <option value="Wi-Fi / Internet">Wi-Fi / Internet</option>
+                <option value="Infrastructure">Infrastructure</option>
+                <option value="Transportation">Transportation</option>
+                <option value="Cleanliness">Cleanliness</option>
+                <option value="Electricity">Electricity</option>
+                <option value="Water Supply">Water Supply</option>
+                <option value="Library">Library</option>
+                <option value="Security">Security</option>
+              </select>
+
+              <select id="admPriorityFilter" class="select-input">
+                <option value="All">All Priorities</option>
+                <option value="Critical">Critical</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+              </select>
+
+              <select id="admDepartmentFilter" class="select-input">
+                <option value="All">All Departments</option>
+                <option value="IT Department">IT Department</option>
+                <option value="Maintenance Department">Maintenance Dept</option>
+                <option value="Hostel Facilities Department">Hostel Dept</option>
+                <option value="Transport Department">Transport Dept</option>
+                <option value="Campus Security & Cleanliness">Security & Cleanliness</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Student Info</th>
+                  <th>Complaint Title & Category</th>
+                  <th>Location</th>
+                  <th>Assigned Dept / Staff</th>
+                  <th>Priority</th>
+                  <th>Status</th>
+                  <th>Quick Actions</th>
+                </tr>
+              </thead>
+              <tbody id="adminComplaintsTableBody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- SUBMIT NEW COMPLAINT MODAL -->
+  <div class="modal-backdrop" id="newComplaintModal" style="display:none;">
+    <div class="glass-card modal-box">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-pen-to-square"></i> Submit New Complaint</h3>
+        <button class="btn-close-modal" id="closeComplaintModalBtn">&times;</button>
+      </div>
+
+      <form id="newComplaintForm" class="modal-form">
+        <div class="form-group">
+          <label for="cmpTitle">Complaint Title *</label>
+          <input type="text" id="cmpTitle" placeholder="e.g. Wi-Fi router not broadcasting in Lab 2" required>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="cmpCategory">Category *</label>
+            <select id="cmpCategory" required>
+              <option value="">Select Category</option>
+              <option value="Classroom">Classroom</option>
+              <option value="Laboratory">Laboratory</option>
+              <option value="Hostel">Hostel</option>
+              <option value="Wi-Fi / Internet">Wi-Fi / Internet</option>
+              <option value="Infrastructure">Infrastructure</option>
+              <option value="Transportation">Transportation</option>
+              <option value="Cleanliness">Cleanliness</option>
+              <option value="Electricity">Electricity</option>
+              <option value="Water Supply">Water Supply</option>
+              <option value="Library">Library</option>
+              <option value="Security">Security</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="cmpLocation">Location / Room Number *</label>
+            <input type="text" id="cmpLocation" placeholder="e.g. Block B, Computer Lab 2" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <label for="cmpDescription">Detailed Description *</label>
+            <button type="button" id="aiAutoCategorizeBtn" class="btn btn-sm btn-accent" style="padding: 4px 10px; font-size: 11px;">
+              <i class="fa-solid fa-wand-magic-sparkles"></i> AI Smart Categorize & Summarize
+            </button>
+          </div>
+          <textarea id="cmpDescription" rows="4" placeholder="Describe what happened, when it occurred, and how severe it is..." required></textarea>
+          <div id="aiSummaryBadge" style="display:none; font-size: 12px; background: rgba(99, 102, 241, 0.15); border: 1px solid var(--border-highlight); padding: 8px 12px; border-radius: var(--radius-sm); color: #a5b4fc; margin-top: 6px;">
+            <i class="fa-solid fa-sparkles"></i> <strong>AI Summary:</strong> <span id="aiSummaryText"></span>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="cmpPriority">Perceived Priority</label>
+            <select id="cmpPriority">
+              <option value="Low">Low (Minor annoyance)</option>
+              <option value="Medium" selected>Medium (Standard issue)</option>
+              <option value="High">High (Affects classes/exams)</option>
+              <option value="Critical">Critical (Safety/Emergency)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="cmpFile">Attach Photo / Evidence (Optional)</label>
+            <input type="file" id="cmpFile" accept="image/*,.pdf,.doc,.docx">
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" id="cancelComplaintModalBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-paper-plane"></i> Submit Complaint</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- COMPLAINT DETAILS & TIMELINE MODAL -->
+  <div class="modal-backdrop" id="complaintDetailModal" style="display:none;">
+    <div class="glass-card modal-box modal-lg">
+      <div class="modal-header">
+        <div class="detail-title-wrap">
+          <span class="badge badge-lg" id="detailIdBadge">CMP-2026-0000</span>
+          <h3 id="detailTitleText">Complaint Title</h3>
+        </div>
+        <button class="btn-close-modal" id="closeDetailModalBtn">&times;</button>
+      </div>
+
+      <div class="modal-body-scroll">
+        <!-- Key Meta Bar -->
+        <div class="detail-meta-grid">
+          <div class="meta-item">
+            <span class="meta-label">Category:</span>
+            <span class="meta-val" id="detailCategory">Category</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Location:</span>
+            <span class="meta-val" id="detailLocation">Location</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Status:</span>
+            <span class="meta-val" id="detailStatusBadge">Status</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Priority:</span>
+            <span class="meta-val" id="detailPriorityBadge">Priority</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Assigned Dept:</span>
+            <span class="meta-val" id="detailAssignedDept">Dept</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Assigned Staff:</span>
+            <span class="meta-val" id="detailAssignedStaff">Staff</span>
+          </div>
+        </div>
+
+        <!-- Description & Attachments -->
+        <div class="detail-section">
+          <h4><i class="fa-solid fa-align-left"></i> Issue Description</h4>
+          <p class="description-box" id="detailDescriptionText">Description details...</p>
+          <div id="detailAttachmentContainer" style="display:none; margin-top: 10px;">
+            <strong>Attachment:</strong> <a id="detailAttachmentLink" href="#" target="_blank" class="btn btn-sm btn-outline"><i class="fa-solid fa-paperclip"></i> View Attached Evidence</a>
+          </div>
+        </div>
+
+        <!-- Resolution Box if resolved -->
+        <div id="detailResolutionCard" class="resolution-card" style="display:none;">
+          <h4><i class="fa-solid fa-circle-check"></i> Official Resolution Details</h4>
+          <p id="detailResolutionText">Resolution notes...</p>
+        </div>
+
+        <!-- Interactive Complaint Progress Timeline -->
+        <div class="detail-section">
+          <h4><i class="fa-solid fa-timeline"></i> Status Flow Timeline</h4>
+          <div class="status-stepper" id="statusStepper">
+            <div class="step-item" id="stepSubmitted"><div class="step-dot"></div><span>Submitted</span></div>
+            <div class="step-line"></div>
+            <div class="step-item" id="stepUnderReview"><div class="step-dot"></div><span>Under Review</span></div>
+            <div class="step-line"></div>
+            <div class="step-item" id="stepAssigned"><div class="step-dot"></div><span>Assigned</span></div>
+            <div class="step-line"></div>
+            <div class="step-item" id="stepInProgress"><div class="step-dot"></div><span>In Progress</span></div>
+            <div class="step-line"></div>
+            <div class="step-item" id="stepResolved"><div class="step-dot"></div><span>Resolved</span></div>
+            <div class="step-line"></div>
+            <div class="step-item" id="stepClosed"><div class="step-dot"></div><span>Closed</span></div>
+          </div>
+        </div>
+
+        <!-- Updates Audit Log -->
+        <div class="detail-section">
+          <h4><i class="fa-solid fa-clock-rotate-left"></i> Updates & Comments Audit Log</h4>
+          <div class="timeline-list" id="timelineList">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <!-- Feedback & Rating Section for Student -->
+        <div id="studentFeedbackSection" class="detail-section feedback-card" style="display:none;">
+          <h4><i class="fa-solid fa-star"></i> Student Satisfaction & Feedback</h4>
+          <form id="feedbackForm">
+            <div class="form-group">
+              <label>Rate Resolution Quality:</label>
+              <div class="star-rating" id="starRatingGroup">
+                <i class="fa-solid fa-star star-btn" data-val="1"></i>
+                <i class="fa-solid fa-star star-btn" data-val="2"></i>
+                <i class="fa-solid fa-star star-btn" data-val="3"></i>
+                <i class="fa-solid fa-star star-btn" data-val="4"></i>
+                <i class="fa-solid fa-star star-btn" data-val="5"></i>
+              </div>
+            </div>
+            <div class="form-group">
+              <textarea id="feedbackComment" rows="2" placeholder="Was your complaint resolved satisfactorily? Leave feedback..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-accent btn-sm"><i class="fa-solid fa-paper-plane"></i> Submit Feedback</button>
+          </form>
+          <div id="existingFeedbackDisplay" style="display:none;">
+            <!-- Display existing feedback -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ADMIN MANAGEMENT ACTION MODAL -->
+  <div class="modal-backdrop" id="adminActionModal" style="display:none;">
+    <div class="glass-card modal-box">
+      <div class="modal-header">
+        <h3 id="adminActionModalTitle">Manage Complaint</h3>
+        <button class="btn-close-modal" id="closeAdminActionModalBtn">&times;</button>
+      </div>
+
+      <form id="adminActionForm" class="modal-form">
+        <input type="hidden" id="actionComplaintId">
+        <input type="hidden" id="actionType">
+
+        <!-- Status Form Fields -->
+        <div id="actionStatusGroup" class="form-group" style="display:none;">
+          <label for="actionStatusSelect">Update Status</label>
+          <select id="actionStatusSelect">
+            <option value="Submitted">Submitted</option>
+            <option value="Under Review">Under Review</option>
+            <option value="Assigned">Assigned</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Resolved">Resolved</option>
+            <option value="Closed">Closed</option>
+          </select>
+        </div>
+
+        <!-- Assignment Form Fields -->
+        <div id="actionAssignGroup" style="display:none;">
+          <div class="form-group">
+            <label for="actionDeptSelect">Assign Department</label>
+            <select id="actionDeptSelect">
+              <option value="IT Department">IT Department</option>
+              <option value="Maintenance Department">Maintenance Department</option>
+              <option value="Hostel Facilities Department">Hostel Facilities Department</option>
+              <option value="Transport Department">Transport Department</option>
+              <option value="Campus Security & Cleanliness">Campus Security & Cleanliness</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="actionStaffSelect">Assign Staff Member</label>
+            <select id="actionStaffSelect">
+              <option value="Unassigned">-- Unassigned --</option>
+              <option value="Mark Miller">Mark Miller (IT)</option>
+              <option value="Sarah Jenkins">Sarah Jenkins (Maintenance)</option>
+              <option value="David Smith">David Smith (Hostel)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Priority Form Fields -->
+        <div id="actionPriorityGroup" class="form-group" style="display:none;">
+          <label for="actionPrioritySelect">Adjust Priority Level</label>
+          <select id="actionPrioritySelect">
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+            <option value="Critical">Critical</option>
+          </select>
+        </div>
+
+        <!-- Comment / Resolution Text Area -->
+        <div class="form-group">
+          <label id="actionNoteLabel" for="actionNoteText">Note / Update Comment</label>
+          <textarea id="actionNoteText" rows="3" placeholder="Enter notes or resolution instructions..."></textarea>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" id="cancelAdminActionModalBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="saveAdminActionBtn">Save Updates</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- Toast Notification System -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>

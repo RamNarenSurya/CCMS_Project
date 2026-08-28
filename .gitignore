@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+.env.local
+
+# Database local storage
+server/database/data.json
+
+# File Uploads
+server/uploads/*
+!server/uploads/.gitkeep
+
+# OS / IDE metadata
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

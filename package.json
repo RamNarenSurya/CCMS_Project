@@ -1,0 +1,30 @@
+{
+  "name": "college-complaint-management-system",
+  "version": "1.0.0",
+  "description": "A centralized digital complaint tracking and resolution platform for colleges with MongoDB & Express backend.",
+  "main": "server/index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node server/index.js",
+    "test": "node server/test.js"
+  },
+  "keywords": [
+    "complaint-management",
+    "college",
+    "express",
+    "mongodb",
+    "mongoose",
+    "rest-api"
+  ],
+  "author": "College Admin Tech Team",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.3.1",
+    "multer": "^1.4.5-lts.1"
+  }
+}
