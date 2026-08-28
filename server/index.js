@@ -16,7 +16,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Serve file uploads static path
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
 // Serve frontend static files
 app.use(express.static(path.join(__dirname, '..', 'public')));
@@ -53,7 +53,7 @@ if (require.main === module) {
     console.log(` 🚀 Server running at : http://localhost:${PORT}`);
     console.log(` 🍃 MongoDB URI       : ${process.env.MONGODB_URI || 'mongodb://localhost:27017/college_complaint_db'}`);
     console.log(` 🔐 Quick Demo Accounts:`);
-    console.log(`    • Student : student@college.edu / student123`);
+    console.log(`    • Student : alex.student@college.edu / student123`);
     console.log(`    • Admin   : admin@college.edu / admin123`);
     console.log(`    • Staff   : it.staff@college.edu / staff123`);
     console.log(`=======================================================`);

@@ -172,14 +172,14 @@ document.addEventListener('DOMContentLoaded', () => {
     adminActionForm.addEventListener('submit', handleAdminActionSubmit);
 
     // Filters & Search
-    stuSearchInput.addEventListener('input', renderStudentComplaints);
-    stuCategoryFilter.addEventListener('change', renderStudentComplaints);
+    if (stuSearchInput) stuSearchInput.addEventListener('input', renderStudentComplaints);
+    if (stuCategoryFilter) stuCategoryFilter.addEventListener('change', renderStudentComplaints);
 
-    admSearchInput.addEventListener('input', fetchAdminComplaints);
-    admStatusFilter.addEventListener('change', fetchAdminComplaints);
-    admCategoryFilter.addEventListener('change', fetchAdminComplaints);
-    admPriorityFilter.addEventListener('change', fetchAdminComplaints);
-    admDepartmentFilter.addEventListener('change', fetchAdminComplaints);
+    if (admSearchInput) admSearchInput.addEventListener('input', fetchAdminComplaints);
+    if (admStatusFilter) admStatusFilter.addEventListener('change', fetchAdminComplaints);
+    if (admCategoryFilter) admCategoryFilter.addEventListener('change', fetchAdminComplaints);
+    if (admPriorityFilter) admPriorityFilter.addEventListener('change', fetchAdminComplaints);
+    if (admDepartmentFilter) admDepartmentFilter.addEventListener('change', fetchAdminComplaints);
 
     // Feedback rating stars
     if (starRatingGroup) {
@@ -194,6 +194,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (feedbackForm) {
       feedbackForm.addEventListener('submit', handleFeedbackSubmit);
+    }
+
+    // Close modals on backdrop click
+    window.addEventListener('click', (e) => {
+      if (e.target && e.target.classList && e.target.classList.contains('modal-backdrop')) {
+        closeModal(e.target);
+      }
+    });
+
+    // Close modals on Escape key
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeModal(newComplaintModal);
+        closeModal(complaintDetailModal);
+        closeModal(adminActionModal);
+      }
+    });
+  }
+
+  // Helper Modal Functions
+  function openModal(modalEl) {
+    if (modalEl) {
+      modalEl.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  function closeModal(modalEl) {
+    if (modalEl) {
+      modalEl.style.display = 'none';
+      document.body.style.overflow = 'auto';
     }
   }
 
