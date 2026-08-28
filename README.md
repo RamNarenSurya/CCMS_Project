@@ -1,0 +1,222 @@
+# College Complaint Management System
+
+![System Status](https://img.shields.io/badge/System-Online-emerald?style=for-the-badge)
+![Tech Stack](https://img.shields.io/badge/Stack-Node.js%20%7C%20Express%20%7C%20MongoDB%20%7C%20Gemini%20AI-indigo?style=for-the-badge)
+![AI Powered](https://img.shields.io/badge/AI-Google%20Gemini%202.5%20Flash-purple?style=for-the-badge)
+![Database](https://img.shields.io/badge/Database-MongoDB%20%2F%20Mongoose-green?style=for-the-badge)
+![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)
+
+A full-stack web application designed to digitize college complaints, connect students with campus departments, track progress through an interactive status timeline, and facilitate fast issue resolution with **Google Gemini AI** smart categorization & executive summaries, MongoDB document storage, Express REST API, and modern glassmorphic web interface.
+
+---
+
+## 📋 Table of Contents
+
+1. [Project Overview](#-project-overview)
+2. [Environment Configuration (`.env`) & Gemini API Key](#-environment-configuration-env--gemini-api-key)
+3. [Gemini AI Features](#-gemini-ai-features)
+4. [MongoDB Setup Guide (Local & MongoDB Atlas Cloud)](#-mongodb-setup-guide-local--cloud)
+5. [Technology Stack](#-technology-stack)
+6. [Database Schemas & Mongoose Models](#-database-schemas--mongoose-models)
+7. [REST API Documentation](#-rest-api-documentation)
+8. [Step-by-Step Installation & Setup](#-step-by-step-installation--setup)
+9. [Troubleshooting Common Issues](#-troubleshooting-common-issues)
+10. [Pre-configured Demo Accounts](#-pre-configured-demo-accounts)
+11. [Complaint Lifecycle & Workflow](#-complaint-lifecycle--workflow)
+12. [Testing & Verification](#-testing--verification)
+
+---
+
+## 🏫 Project Overview
+
+The **College Complaint Management System** is a centralized digital platform for higher education institutions:
+- **Students** submit complaints categorized by department/issue type, specify precise location, upload evidence attachments, track resolution progress via step-by-step status timeline, and submit satisfaction ratings (1-5 stars).
+- **Google Gemini AI Integration** automatically analyzes student complaint descriptions, suggests appropriate category & priority level, and generates 1-sentence executive summaries.
+- **Administrators & Staff** view, search, filter, assign complaints to specific departments (IT, Maintenance, Hostel, Security, Transport), adjust priority levels (`Low`, `Medium`, `High`, `Critical`), update progress statuses, add notes, and record resolution details.
+- **MongoDB Integration** provides scalable document storage for all accounts, tickets, updates, and feedback metrics.
+
+---
+
+## 🔑 Environment Configuration (`.env`) & Gemini API Key
+
+All connection URIs, database settings, server ports, secret keys, and **Gemini AI API Key** MUST be configured in the [`.env`](file:///c:/PROJECTS/project2/.env) file located in the root of the project directory.
+
+### Sample `.env` File:
+
+```env
+# Server Port Configuration
+PORT=3000
+
+# MongoDB Database Connection URI
+# Local MongoDB:
+MONGODB_URI=mongodb://localhost:27017/college_complaint_db
+
+# MongoDB Atlas Cloud Database:
+# MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/college_complaint_db?retryWrites=true&w=majority
+
+# JWT Token Signing Secret Key
+JWT_SECRET=college_complaint_mgmt_secret_key_2026
+
+# Google Gemini AI API Key (Get your free key from https://aistudio.google.com/)
+GEMINI_API_KEY=your_gemini_api_key_here
+```
+
+### How to Get a Free Google Gemini API Key:
+1. Visit **[Google AI Studio](https://aistudio.google.com/)**.
+2. Sign in with your Google account.
+3. Click **Get API key** → **Create API key**.
+4. Copy the generated key string and paste it into your `.env` file as `GEMINI_API_KEY=AIzaSy...`.
+
+---
+
+## 🤖 Gemini AI Features
+
+### 1. Automatic AI Categorization & Urgency Assessment
+When a student types a complaint description, clicking the **"✨ AI Smart Categorize & Summarize"** button analyzes the text and automatically picks the best matching category (`Wi-Fi / Internet`, `Laboratory`, `Classroom`, `Hostel`, `Water Supply`, `Electricity`, `Cleanliness`, `Transportation`, `Library`, `Security`, `Other`) and suggested urgency level (`Low`, `Medium`, `High`, `Critical`).
+
+### 2. Executive Issue Summaries
+Gemini AI distills multi-paragraph complaint descriptions into a concise 1-sentence executive summary to help college admins process high volumes of tickets quickly.
+
+### 3. Graceful Fallback Guarantee
+If `GEMINI_API_KEY` is not supplied, the system automatically uses smart NLP heuristic pattern matching so AI features continue to work seamlessly in all offline/dev environments.
+
+---
+
+## 🍃 MongoDB Setup Guide (Local & Cloud)
+
+### Option A: Local MongoDB Setup
+
+1. **Download & Install MongoDB Community Server**:
+   - Download from [MongoDB Download Center](https://www.mongodb.com/try/download/community).
+   - Make sure the MongoDB Service (`mongod`) is started.
+
+2. **Verify Local Connection**:
+   - Default URI: `mongodb://localhost:27017/college_complaint_db`.
+
+---
+
+### Option B: MongoDB Atlas Cloud Setup
+
+1. Sign up at [mongodb.com/cloud/atlas](https://www.mongodb.com/cloud/atlas).
+2. Create a free **M0 Shared Cluster**.
+3. Copy Connection String (e.g., `mongodb+srv://<username>:<password>@cluster.mongodb.net/college_complaint_db`).
+4. Update `MONGODB_URI` in `.env`.
+
+---
+
+## 💻 Technology Stack
+
+| Layer | Technology | Function |
+| :--- | :--- | :--- |
+| **Frontend** | HTML5, CSS3, JavaScript (ES6+) | Modern SPA with Glassmorphism aesthetic, responsive dashboards, interactive stepper |
+| **Backend** | Node.js, Express.js | Modular REST API server with JWT Auth, CORS, Multer file upload |
+| **AI Integration** | Google Gemini 2.5 Flash API | AI text categorization, priority suggestion, executive summaries |
+| **Database** | MongoDB & Mongoose ORM | Document storage for users, complaints, departments, staff, updates, feedback |
+| **Environment** | `dotenv` | Centralized URI, key, and environment configuration management |
+
+---
+
+## 🗄️ Database Schemas & Mongoose Models
+
+All schemas are defined under [`server/models/`](file:///c:/PROJECTS/project2/server/models/):
+
+- [`server/models/User.js`](file:///c:/PROJECTS/project2/server/models/User.js) (Student, Admin, Staff accounts)
+- [`server/models/Complaint.js`](file:///c:/PROJECTS/project2/server/models/Complaint.js) (Complaints, Category, Status, Attachments)
+- [`server/models/Department.js`](file:///c:/PROJECTS/project2/server/models/Department.js) (College departments)
+- [`server/models/Staff.js`](file:///c:/PROJECTS/project2/server/models/Staff.js) (Staff assignments)
+- [`server/models/Update.js`](file:///c:/PROJECTS/project2/server/models/Update.js) (Timeline history audit logs)
+- [`server/models/Feedback.js`](file:///c:/PROJECTS/project2/server/models/Feedback.js) (Student 1-5 star feedback ratings)
+
+---
+
+## 📡 REST API Documentation
+
+### 1. Gemini AI API (`/api/ai`)
+- `POST /api/ai/analyze` — Analyzes complaint description using Gemini AI, returns `{ category, priority, summary }`
+
+### 2. Authentication (`/api/auth`)
+- `POST /api/auth/register` — Register student account
+- `POST /api/auth/login` — Authenticate user
+- `GET /api/auth/me` — Retrieve active session
+
+### 3. Complaints (`/api/complaints`)
+- `POST /api/complaints` — Submit new complaint
+- `GET /api/complaints/my` — Fetch student complaints
+- `GET /api/complaints/:id` — View details, timeline audit log, & rating
+- `POST /api/complaints/:id/feedback` — Submit student rating feedback
+
+### 4. Admin & Operations (`/api/admin`)
+- `GET /api/admin/complaints` — Master complaint table with search/filtering
+- `PUT /api/admin/complaints/:id/status` — Update status
+- `PUT /api/admin/complaints/:id/assign` — Assign department and staff
+- `PUT /api/admin/complaints/:id/priority` — Adjust priority level
+- `POST /api/admin/complaints/:id/resolve` — Record resolution details
+
+---
+
+## 🚀 Step-by-Step Installation & Setup
+
+1. **Navigate to Project Directory**:
+   ```bash
+   cd c:\PROJECTS\project2
+   ```
+
+2. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
+
+3. **Set Up `.env` Environment Variables**:
+   ```bash
+   # Copy example template or edit .env directly
+   cp .env.example .env
+   ```
+   Open `.env` and fill in your keys:
+   ```env
+   PORT=3000
+   MONGODB_URI=mongodb://localhost:27017/college_complaint_db
+   JWT_SECRET=college_complaint_mgmt_secret_key_2026
+   GEMINI_API_KEY=your_gemini_api_key_here
+   ```
+
+4. **Start the Express Server**:
+   ```bash
+   npm start
+   ```
+
+5. **Access in Browser**:
+   Navigate to **[http://localhost:3000](http://localhost:3000)**
+
+---
+
+## 🛠️ Troubleshooting Common Issues
+
+### Issue: `Error: listen EADDRINUSE: address already in use :::3000`
+
+This occurs when port 3000 is already in use by another running server instance.
+
+#### Solution Options:
+- **Change PORT in `.env`**:
+  Set `PORT=3001` in `.env` and run `npm start`.
+- **Kill process on port 3000 (PowerShell)**:
+  ```powershell
+  Get-NetTCPConnection -LocalPort 3000 | Select-Object OwningProcess
+  Stop-Process -Id <PID> -Force
+  ```
+
+---
+
+## 🔑 Pre-configured Demo Accounts
+
+| Role | Email | Password | Features Available |
+| :--- | :--- | :--- | :--- |
+| 👨‍🎓 **Student** | `alex.student@college.edu` | `student123` | Submit complaints, AI assistance, track timeline, rate resolutions |
+| 👨‍🎓 **Student 2** | `emily.davis@college.edu` | `student123` | Submit complaints, view student portal |
+| 🛡️ **Admin** | `admin@college.edu` | `admin123` | Full admin rights, assign depts, analytics, resolve tickets |
+| ⚙️ **Staff (IT)** | `it.staff@college.edu` | `staff123` | View IT assigned tickets, add progress updates |
+
+---
+
+*College Complaint Management System — Powered by Node.js, Express, MongoDB, & Google Gemini AI.*
+#   C C M S _ P r o j e c t  
+ 
