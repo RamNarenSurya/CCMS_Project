@@ -149,9 +149,9 @@ document.addEventListener('DOMContentLoaded', () => {
     logoutBtn.addEventListener('click', handleLogout);
 
     // Quick Demo Buttons
-    demoStudentBtn.addEventListener('click', () => quickLogin('alex.student@college.edu', 'student123'));
-    demoAdminBtn.addEventListener('click', () => quickLogin('admin@college.edu', 'admin123'));
-    demoStaffBtn.addEventListener('click', () => quickLogin('it.staff@college.edu', 'staff123'));
+    demoStudentBtn.addEventListener('click', () => quickLogin('surya.student@college.edu', 'student123'));
+    demoAdminBtn.addEventListener('click', () => quickLogin('surya@college.edu', 'admin123'));
+    demoStaffBtn.addEventListener('click', () => quickLogin('surya.staff@college.edu', 'staff123'));
 
     // Modal controls
     openNewComplaintBtn.addEventListener('click', () => openModal(newComplaintModal));
@@ -308,6 +308,9 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
 
+    const loggedInLabel = document.getElementById('loggedInLabel');
+    if (loggedInLabel) loggedInLabel.style.display = 'none';
+
     userInfoDisplay.style.display = 'none';
     authNavButtons.style.display = 'flex';
     studentDashboard.style.display = 'none';
@@ -324,6 +327,16 @@ document.addEventListener('DOMContentLoaded', () => {
     userInfoDisplay.style.display = 'flex';
     userNameDisplay.textContent = state.user.name;
     userRoleBadge.textContent = state.user.role;
+
+    const loggedInLabel = document.getElementById('loggedInLabel');
+    const loggedInName = document.getElementById('loggedInName');
+    const loggedInRole = document.getElementById('loggedInRole');
+
+    if (loggedInLabel && loggedInName && loggedInRole) {
+      loggedInLabel.style.display = 'inline-block';
+      loggedInName.textContent = state.user.name;
+      loggedInRole.textContent = state.user.role;
+    }
   }
 
   function showAuthCard(tab = 'login') {
