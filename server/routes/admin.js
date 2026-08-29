@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const { readDB, writeDB } = require('../db');
+const { getActiveUsers } = require('./auth');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'college_complaint_mgmt_secret_key_2026';
 
@@ -25,6 +26,15 @@ function requireAdminOrStaff(req, res, next) {
 }
 
 // GET /api/admin/complaints - Get all complaints with search & filters
+router.get('/active-users', requireAdminOrStaff, (req, res) => {
+  const users = getActiveUsers();
+  res.json({
+    success: true,
+    count: users.length,
+    users
+  });
+});
+
 router.get('/complaints', requireAdminOrStaff, (req, res) => {
   const { search, category, status, priority, department, sort } = req.query;
   const db = readDB();

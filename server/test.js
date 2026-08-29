@@ -273,6 +273,16 @@ const server = app.listen(PORT, async () => {
     });
     assert(deptRes.status === 200 && Array.isArray(deptRes.body.departments), 'Feature 18: College Departments & Staff Directory');
 
+    // 19. Admin Active Users Tracking
+    const activeUsersRes = await request({
+      hostname: '127.0.0.1',
+      port: PORT,
+      path: '/api/admin/active-users',
+      method: 'GET',
+      headers: { 'Authorization': `Bearer ${adminToken}` }
+    });
+    assert(activeUsersRes.status === 200 && Array.isArray(activeUsersRes.body.users), 'Feature 19: Admin Active User Monitoring');
+
     console.log('\n=======================================================');
     console.log(` 📊 SUMMARY: ${passedCount} PASSED | ${failedCount} FAILED`);
     console.log('=======================================================\n');

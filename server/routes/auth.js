@@ -5,11 +5,44 @@ const { readDB, writeDB } = require('../db');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'college_complaint_mgmt_secret_key_2026';
 
-// Helper to sanitize user output
+const activeUsers = new Map();
+
 function sanitizeUser(user) {
   const { password, ...rest } = user;
   return rest;
 }
+
+function markUserActive(user) {
+  const cleanUser = sanitizeUser(user);
+  activeUsers.set(user.id, {
+    ...cleanUser,
+    loggedInAt: new Date().toISOString(),
+    lastSeen: new Date().toISOString()
+  });
+  return activeUsers.get(user.id);
+}
+
+function touchUserActivity(userId) {
+  if (!userId || !activeUsers.has(userId)) return null;
+  const user = activeUsers.get(userId);
+  user.lastSeen = new Date().toISOString();
+  return user;
+}
+
+function removeUserActive(userId) {
+  activeUsers.delete(userId);
+}
+
+function getActiveUsers() {
+  return Array.from(activeUsers.values()).sort((a, b) => new Date(b.lastSeen) - new Date(a.lastSeen));
+}
+
+module.exports = router;
+module.exports.sanitizeUser = sanitizeUser;
+module.exports.markUserActive = markUserActive;
+module.exports.touchUserActivity = touchUserActivity;
+module.exports.removeUserActive = removeUserActive;
+module.exports.getActiveUsers = getActiveUsers;
 
 // POST /api/auth/register
 router.post('/register', (req, res) => {
@@ -47,6 +80,7 @@ router.post('/register', (req, res) => {
   writeDB(db);
 
   const token = jwt.sign({ id: newUser.id, email: newUser.email, role: newUser.role, name: newUser.name }, JWT_SECRET, { expiresIn: '7d' });
+  markUserActive(newUser);
 
   res.status(201).json({
     success: true,
@@ -77,6 +111,7 @@ router.post('/login', (req, res) => {
   }
 
   const token = jwt.sign({ id: user.id, email: user.email, role: user.role, name: user.name }, JWT_SECRET, { expiresIn: '7d' });
+  markUserActive(user);
 
   res.json({
     success: true,
@@ -103,6 +138,7 @@ router.get('/me', (req, res) => {
       return res.status(404).json({ success: false, message: 'User account not found.' });
     }
 
+    touchUserActivity(decoded.id);
     res.json({
       success: true,
       user: sanitizeUser(user)
@@ -112,4 +148,26 @@ router.get('/me', (req, res) => {
   }
 });
 
+// POST /api/auth/logout
+router.post('/logout', (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.json({ success: true, message: 'No active session to clear.' });
+  }
+
+  const token = authHeader.split(' ')[1];
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    removeUserActive(decoded.id);
+    return res.json({ success: true, message: 'Logged out successfully.' });
+  } catch (err) {
+    return res.json({ success: true, message: 'Session already cleared.' });
+  }
+});
+
 module.exports = router;
+module.exports.sanitizeUser = sanitizeUser;
+module.exports.markUserActive = markUserActive;
+module.exports.touchUserActivity = touchUserActivity;
+module.exports.removeUserActive = removeUserActive;
+module.exports.getActiveUsers = getActiveUsers;

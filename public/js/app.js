@@ -47,6 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Admin Dashboard Elements
   const adminRoleDisplay = document.getElementById('adminRoleDisplay');
+  const activeUsersList = document.getElementById('activeUsersList');
   const adminComplaintsTableBody = document.getElementById('adminComplaintsTableBody');
   const admSearchInput = document.getElementById('admSearchInput');
   const admStatusFilter = document.getElementById('admStatusFilter');
@@ -302,7 +303,13 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (err) {}
   }
 
-  function handleLogout() {
+  async function handleLogout() {
+    try {
+      if (state.token) {
+        await apiCall('/api/auth/logout', 'POST');
+      }
+    } catch (err) {}
+
     state.token = null;
     state.user = null;
     localStorage.removeItem('token');
@@ -364,6 +371,7 @@ document.addEventListener('DOMContentLoaded', () => {
       adminRoleDisplay.innerHTML = `<i class="fa-solid fa-user-shield"></i> ${state.user.role} (${state.user.department || 'All Access'})`;
       fetchAdminComplaints();
       fetchAdminStats();
+      fetchActiveUsers();
     } else {
       adminDashboard.style.display = 'none';
       studentDashboard.style.display = 'block';
@@ -539,7 +547,6 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('admCritical').textContent = stats.critical;
       document.getElementById('admResolutionRate').textContent = `${stats.resolution_rate}%`;
 
-      // Render Department Breakdown Chips
       const chipsContainer = document.getElementById('deptSummaryChips');
       chipsContainer.innerHTML = '';
       Object.entries(stats.by_department).forEach(([dept, count]) => {
@@ -549,6 +556,35 @@ document.addEventListener('DOMContentLoaded', () => {
         chipsContainer.appendChild(chip);
       });
     } catch (err) {}
+  }
+
+  async function fetchActiveUsers() {
+    try {
+      const data = await apiCall('/api/admin/active-users');
+      const users = data.users || [];
+
+      if (!activeUsersList) return;
+
+      if (!users.length) {
+        activeUsersList.innerHTML = '<p class="muted-text">No active users right now.</p>';
+        return;
+      }
+
+      activeUsersList.innerHTML = users.map(user => `
+        <div class="active-user-item">
+          <div class="user-pill ${user.role.toLowerCase()}">${user.role}</div>
+          <div class="user-meta">
+            <strong>${escapeHtml(user.name)}</strong>
+            <span>${escapeHtml(user.email)}</span>
+          </div>
+          <small>Logged in: ${new Date(user.lastSeen).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</small>
+        </div>
+      `).join('');
+    } catch (err) {
+      if (activeUsersList) {
+        activeUsersList.innerHTML = '<p class="muted-text">Unable to load active users.</p>';
+      }
+    }
   }
 
   function renderAdminComplaints() {

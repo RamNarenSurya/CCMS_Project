@@ -217,6 +217,68 @@ This occurs when port 3000 is already in use by another running server instance.
 
 ---
 
+## 🆕 Recent Updates & Customizations
+
+### 1. User naming update
+The default seeded accounts were standardized so the main admin and staff identity appears as `Surya`:
+
+- Student: `surya.student@college.edu` / `student123`
+- Admin: `surya@college.edu` / `admin123`
+- Staff: `surya.staff@college.edu` / `staff123`
+
+This change is reflected in the default database seed data and is used in the demo login flows.
+
+### 2. Admin active-user tracking
+An admin-side active sessions block was added to the dashboard so the admin can view the list of currently logged-in users.
+
+- Server-side session tracking is managed in `server/routes/auth.js`
+- Admin API endpoint: `GET /api/admin/active-users`
+- Dashboard UI: `Active Users` section in the admin panel
+
+This lets admins view who is currently signed in with their role and most recent activity timestamp.
+
+### 3. Login/logout session management
+The system now tracks user login and logout events for the active session list.
+
+- Login registers the user in the active session list
+- `/api/auth/me` refreshes last-seen activity
+- `/api/auth/logout` removes the session from active tracking
+
+### 4. Deployment & live-site verification notes
+The project is deployment-ready with the latest code pushed and redeployed as needed.
+
+Deployment checklist:
+1. Save code changes
+2. Commit project updates
+3. Push to the remote repository
+4. Trigger deployment or restart the server
+5. Refresh the live site
+6. Open browser DevTools → Application → Local Storage
+7. Check `user` and `token` to confirm the current logged-in user
+
+### 5. How to verify who is logged in
+After logging into the live app:
+
+1. Open browser DevTools
+2. Go to `Application`
+3. Open `Local Storage`
+4. Select the site domain
+5. Click the `user` object
+6. Check `name`, `email`, and `role`
+
+Example JSON value:
+
+```json
+{
+  "id": "USR-ADM-001",
+  "name": "Surya",
+  "email": "surya@college.edu",
+  "role": "Admin"
+}
+```
+
+This confirms the currently active user and their role.
+
+---
+
 *College Complaint Management System — Powered by Node.js, Express, MongoDB, & Google Gemini AI.*
-#   C C M S _ P r o j e c t  
- 
