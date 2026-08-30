@@ -27,6 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const demoStudentBtn = document.getElementById('demoStudentBtn');
   const demoAdminBtn = document.getElementById('demoAdminBtn');
   const demoStaffBtn = document.getElementById('demoStaffBtn');
+  const demoLoginBar = document.querySelector('.demo-login-bar');
+  const isDemoMode = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
   // View Containers
   const authCardWrapper = document.getElementById('authCardWrapper');
@@ -144,15 +146,33 @@ document.addEventListener('DOMContentLoaded', () => {
     showLoginBtn.addEventListener('click', () => showAuthCard('login'));
     showRegisterBtn.addEventListener('click', () => showAuthCard('register'));
 
+    if (demoLoginBar) {
+      if (!isDemoMode) {
+        demoLoginBar.style.display = 'none';
+      }
+    }
+
     // Auth Forms
     loginForm.addEventListener('submit', handleLogin);
     registerForm.addEventListener('submit', handleRegister);
     logoutBtn.addEventListener('click', handleLogout);
 
-    // Quick Demo Buttons
-    demoStudentBtn.addEventListener('click', () => quickLogin('surya.student@college.edu', 'student123'));
-    demoAdminBtn.addEventListener('click', () => quickLogin('surya@college.edu', 'admin123'));
-    demoStaffBtn.addEventListener('click', () => quickLogin('surya.staff@college.edu', 'staff123'));
+    // Quick Demo Buttons (only enabled in local demo mode)
+    if (isDemoMode) {
+      if (demoStudentBtn) {
+        demoStudentBtn.addEventListener('click', () => quickLogin('surya.student@college.edu', 'student123'));
+      }
+      if (demoAdminBtn) {
+        demoAdminBtn.addEventListener('click', () => quickLogin('surya@college.edu', 'admin123'));
+      }
+      if (demoStaffBtn) {
+        demoStaffBtn.addEventListener('click', () => quickLogin('surya.staff@college.edu', 'staff123'));
+      }
+    } else {
+      if (demoStudentBtn) demoStudentBtn.style.display = 'none';
+      if (demoAdminBtn) demoAdminBtn.style.display = 'none';
+      if (demoStaffBtn) demoStaffBtn.style.display = 'none';
+    }
 
     // Modal controls
     openNewComplaintBtn.addEventListener('click', () => openModal(newComplaintModal));
