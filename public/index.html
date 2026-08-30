@@ -44,6 +44,9 @@
         <div class="user-info" id="userInfoDisplay" style="display:none;">
           <span class="user-role-badge" id="userRoleBadge">Student</span>
           <span class="user-name" id="userNameDisplay">Alex Johnson</span>
+          <button class="btn btn-outline btn-small" id="profileBtn" title="Profile">
+            <i class="fa-solid fa-user"></i>
+          </button>
           <button class="btn btn-icon btn-logout" id="logoutBtn" title="Logout">
             <i class="fa-solid fa-right-from-bracket"></i>
           </button>
@@ -313,6 +316,24 @@
             <h4><i class="fa-solid fa-chart-pie"></i> Resolution Rate: <span id="admResolutionRate" class="text-gradient">0%</span></h4>
             <div class="dept-summary-chips" id="deptSummaryChips">
               <!-- Dynamically populated -->
+            </div>
+          </div>
+          <div class="analytics-summary-grid" id="analyticsSummaryGrid">
+            <div class="summary-mini-card">
+              <span>Top Categories</span>
+              <strong id="topCategoryLabel">-</strong>
+            </div>
+            <div class="summary-mini-card">
+              <span>Critical Count</span>
+              <strong id="criticalSummaryLabel">0</strong>
+            </div>
+            <div class="summary-mini-card">
+              <span>High Priority</span>
+              <strong id="highPrioritySummaryLabel">0</strong>
+            </div>
+            <div class="summary-mini-card">
+              <span>Monthly Trend</span>
+              <strong id="monthlyTrendLabel">-</strong>
             </div>
           </div>
         </div>
@@ -679,6 +700,67 @@
     </div>
   </div>
 
+
+  <div class="modal-backdrop" id="profileModal" style="display:none;">
+    <div class="modal-card profile-modal">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-user-gear"></i> My Profile</h3>
+        <button class="modal-close-btn" id="closeProfileModalBtn" type="button" aria-label="Close profile modal">×</button>
+      </div>
+
+      <form id="profileForm">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="profileName">Full Name</label>
+            <input type="text" id="profileName" required>
+          </div>
+
+          <div class="form-group">
+            <label for="profileEmail">Email</label>
+            <input type="email" id="profileEmail" disabled>
+          </div>
+
+          <div class="form-group">
+            <label for="profilePhone">Phone Number</label>
+            <input type="tel" id="profilePhone">
+          </div>
+
+          <div class="form-group">
+            <label for="profileDepartment">Department</label>
+            <input type="text" id="profileDepartment">
+          </div>
+
+          <div class="form-group">
+            <label for="profileYear">Year</label>
+            <input type="text" id="profileYear">
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" id="cancelProfileModalBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Profile</button>
+        </div>
+      </form>
+
+      <form id="passwordForm" class="mt-16">
+        <h4 class="subsection-title">Change Password</h4>
+        <div class="form-group">
+          <label for="currentPassword">Current Password</label>
+          <input type="password" id="currentPassword" placeholder="Enter current password" required>
+        </div>
+
+        <div class="form-group">
+          <label for="newPassword">New Password</label>
+          <input type="password" id="newPassword" placeholder="Enter new password" required>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" id="cancelPasswordFormBtn">Clear</button>
+          <button type="submit" class="btn btn-primary">Update Password</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <!-- Toast Notification System -->
   <div class="toast-container" id="toastContainer"></div>

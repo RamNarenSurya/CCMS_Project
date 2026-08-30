@@ -222,6 +222,116 @@ router.get('/me', (req, res) => {
   }
 });
 
+// GET /api/auth/profile
+router.get('/profile', (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ success: false, message: 'Authorization token required.' });
+  }
+
+  const token = authHeader.split(' ')[1];
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const db = readDB();
+    const user = db.users.find(u => u.id === decoded.id);
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User account not found.' });
+    }
+
+    touchUserActivity(decoded.id);
+    res.json({
+      success: true,
+      user: sanitizeUser(user)
+    });
+  } catch (err) {
+    return res.status(401).json({ success: false, message: 'Invalid or expired token.' });
+  }
+});
+
+// PUT /api/auth/profile
+router.put('/profile', (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ success: false, message: 'Authorization token required.' });
+  }
+
+  const token = authHeader.split(' ')[1];
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const db = readDB();
+    const userIndex = db.users.findIndex(u => u.id === decoded.id);
+
+    if (userIndex === -1) {
+      return res.status(404).json({ success: false, message: 'User account not found.' });
+    }
+
+    const { name, phone, department, year } = req.body;
+    if (!name) {
+      return res.status(400).json({ success: false, message: 'Name is required.' });
+    }
+
+    db.users[userIndex].name = name.trim();
+    if (phone !== undefined) db.users[userIndex].phone = phone.trim();
+    if (department !== undefined) db.users[userIndex].department = department;
+    if (year !== undefined) db.users[userIndex].year = year;
+
+    writeDB(db);
+    touchUserActivity(decoded.id);
+
+    res.json({
+      success: true,
+      message: 'Profile updated successfully.',
+      user: sanitizeUser(db.users[userIndex])
+    });
+  } catch (err) {
+    return res.status(401).json({ success: false, message: 'Invalid or expired token.' });
+  }
+});
+
+// PUT /api/auth/change-password
+router.put('/change-password', (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ success: false, message: 'Authorization token required.' });
+  }
+
+  const { currentPassword, newPassword } = req.body;
+  if (!currentPassword || !newPassword) {
+    return res.status(400).json({ success: false, message: 'Current and new password are required.' });
+  }
+
+  if (newPassword.length < 6) {
+    return res.status(400).json({ success: false, message: 'New password must be at least 6 characters long.' });
+  }
+
+  const token = authHeader.split(' ')[1];
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const db = readDB();
+    const user = db.users.find(u => u.id === decoded.id);
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User account not found.' });
+    }
+
+    if (user.password !== currentPassword) {
+      return res.status(401).json({ success: false, message: 'Current password is incorrect.' });
+    }
+
+    user.password = newPassword;
+    writeDB(db);
+    touchUserActivity(decoded.id);
+
+    res.json({
+      success: true,
+      message: 'Password changed successfully.'
+    });
+  } catch (err) {
+    return res.status(401).json({ success: false, message: 'Invalid or expired token.' });
+  }
+});
+
 // POST /api/auth/logout
 router.post('/logout', (req, res) => {
   const authHeader = req.headers.authorization;

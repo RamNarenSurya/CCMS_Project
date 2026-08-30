@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const userRoleBadge = document.getElementById('userRoleBadge');
   const authNavButtons = document.getElementById('authNavButtons');
   const logoutBtn = document.getElementById('logoutBtn');
+  const profileBtn = document.getElementById('profileBtn');
   const showLoginBtn = document.getElementById('showLoginBtn');
   const showRegisterBtn = document.getElementById('showRegisterBtn');
 
@@ -61,6 +62,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const admDepartmentFilter = document.getElementById('admDepartmentFilter');
 
   // Modals
+  const profileModal = document.getElementById('profileModal');
+  const profileForm = document.getElementById('profileForm');
+  const closeProfileModalBtn = document.getElementById('closeProfileModalBtn');
+  const cancelProfileModalBtn = document.getElementById('cancelProfileModalBtn');
+  const passwordForm = document.getElementById('passwordForm');
+  const cancelPasswordFormBtn = document.getElementById('cancelPasswordFormBtn');
+
   const newComplaintModal = document.getElementById('newComplaintModal');
   const newComplaintForm = document.getElementById('newComplaintForm');
   const closeComplaintModalBtn = document.getElementById('closeComplaintModalBtn');
@@ -174,6 +182,12 @@ document.addEventListener('DOMContentLoaded', () => {
     loginForm.addEventListener('submit', handleLogin);
     registerForm.addEventListener('submit', handleRegister);
     logoutBtn.addEventListener('click', handleLogout);
+    if (profileBtn) profileBtn.addEventListener('click', openProfileModal);
+    if (closeProfileModalBtn) closeProfileModalBtn.addEventListener('click', () => closeModal(profileModal));
+    if (cancelProfileModalBtn) cancelProfileModalBtn.addEventListener('click', () => closeModal(profileModal));
+    if (cancelPasswordFormBtn) cancelPasswordFormBtn.addEventListener('click', () => passwordForm.reset());
+    if (profileForm) profileForm.addEventListener('submit', handleProfileUpdate);
+    if (passwordForm) passwordForm.addEventListener('submit', handlePasswordChange);
 
     if (themeToggle) {
       themeToggle.addEventListener('click', () => {
@@ -409,6 +423,48 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  function openProfileModal() {
+    if (!state.user) return;
+    document.getElementById('profileName').value = state.user.name || '';
+    document.getElementById('profileEmail').value = state.user.email || '';
+    document.getElementById('profilePhone').value = state.user.phone || '';
+    document.getElementById('profileDepartment').value = state.user.department || '';
+    document.getElementById('profileYear').value = state.user.year || '';
+    openModal(profileModal);
+  }
+
+  async function handleProfileUpdate(e) {
+    e.preventDefault();
+    try {
+      const data = await apiCall('/api/auth/profile', 'PUT', {
+        name: document.getElementById('profileName').value.trim(),
+        phone: document.getElementById('profilePhone').value.trim(),
+        department: document.getElementById('profileDepartment').value.trim(),
+        year: document.getElementById('profileYear').value.trim()
+      });
+      state.user = data.user;
+      localStorage.setItem('user', JSON.stringify(data.user));
+      updateUserUI();
+      closeModal(profileModal);
+      showToast(data.message, 'success');
+    } catch (err) {}
+  }
+
+  async function handlePasswordChange(e) {
+    e.preventDefault();
+    const currentPassword = document.getElementById('currentPassword').value;
+    const newPassword = document.getElementById('newPassword').value;
+
+    try {
+      const data = await apiCall('/api/auth/change-password', 'PUT', {
+        currentPassword,
+        newPassword
+      });
+      passwordForm.reset();
+      showToast(data.message, 'success');
+    } catch (err) {}
+  }
+
   function loadRoleDashboard() {
     if (state.user.role === 'Admin' || state.user.role === 'Staff') {
       studentDashboard.style.display = 'none';
@@ -601,6 +657,16 @@ document.addEventListener('DOMContentLoaded', () => {
         chip.innerHTML = `${dept}: <strong>${count}</strong>`;
         chipsContainer.appendChild(chip);
       });
+
+      const topCategory = stats.summaryRows && stats.summaryRows[0];
+      document.getElementById('topCategoryLabel').textContent = topCategory ? `${topCategory.label} (${topCategory.count})` : 'N/A';
+      document.getElementById('criticalSummaryLabel').textContent = stats.critical || 0;
+      document.getElementById('highPrioritySummaryLabel').textContent = stats.high || 0;
+
+      const trendEntries = Object.entries(stats.monthlyTrend || {});
+      document.getElementById('monthlyTrendLabel').textContent = trendEntries.length
+        ? `${trendEntries[trendEntries.length - 1][0]}: ${trendEntries[trendEntries.length - 1][1]}`
+        : 'N/A';
     } catch (err) {}
   }
 
