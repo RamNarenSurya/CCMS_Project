@@ -271,6 +271,53 @@ document.addEventListener('DOMContentLoaded', () => {
         closeModal(adminActionModal);
       }
     });
+
+    // Toggle Section Buttons - Optional Display
+    const toggleResolutionRateBtn = document.getElementById('toggleResolutionRateBtn');
+    const resolutionRateSection = document.getElementById('resolutionRateSection');
+    const toggleActiveUsersBtn = document.getElementById('toggleActiveUsersBtn');
+    const activeUsersSection = document.getElementById('activeUsersSection');
+    const toggleAnalyticsTablesBtn = document.getElementById('toggleAnalyticsTablesBtn');
+    const analyticsTablesSection = document.getElementById('analyticsTablesSection');
+
+    // Helper function to toggle section visibility
+    function toggleSectionVisibility(btn, section, contentSelector) {
+      if (!btn || !section) return;
+      
+      btn.addEventListener('click', () => {
+        const content = section.querySelector(contentSelector);
+        if (!content) return;
+
+        btn.classList.toggle('collapsed');
+        content.classList.toggle('section-content-hidden');
+        content.classList.toggle('section-content-visible');
+      });
+    }
+
+    // Setup toggles for each section
+    if (resolutionRateSection) {
+      const summaryGrid = resolutionRateSection.querySelector('.analytics-summary-grid');
+      if (summaryGrid) {
+        summaryGrid.classList.add('section-content-visible');
+        toggleSectionVisibility(toggleResolutionRateBtn, resolutionRateSection, '.analytics-summary-grid');
+      }
+    }
+
+    if (activeUsersSection) {
+      const usersList = activeUsersSection.querySelector('.active-users-list');
+      if (usersList) {
+        usersList.classList.add('section-content-visible');
+        toggleSectionVisibility(toggleActiveUsersBtn, activeUsersSection, '.active-users-list');
+      }
+    }
+
+    if (analyticsTablesSection) {
+      const tablesGrid = analyticsTablesSection.querySelector('.tables-grid');
+      if (tablesGrid) {
+        tablesGrid.classList.add('section-content-visible');
+        toggleSectionVisibility(toggleAnalyticsTablesBtn, analyticsTablesSection, '.tables-grid');
+      }
+    }
   }
 
   // Helper Modal Functions

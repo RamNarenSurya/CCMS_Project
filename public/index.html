@@ -311,12 +311,17 @@
         </div>
 
         <!-- Analytics Distribution Bar -->
-        <div class="glass-card analytics-panel">
-          <div class="analytics-header">
-            <h4><i class="fa-solid fa-chart-pie"></i> Resolution Rate: <span id="admResolutionRate" class="text-gradient">0%</span></h4>
-            <div class="dept-summary-chips" id="deptSummaryChips">
-              <!-- Dynamically populated -->
+        <div class="glass-card analytics-panel" id="resolutionRateSection">
+          <div class="analytics-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <h4><i class="fa-solid fa-chart-pie"></i> Resolution Rate: <span id="admResolutionRate" class="text-gradient">0%</span></h4>
+              <div class="dept-summary-chips" id="deptSummaryChips">
+                <!-- Dynamically populated -->
+              </div>
             </div>
+            <button class="btn-toggle-section" id="toggleResolutionRateBtn" type="button" title="Toggle Resolution Rate">
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
           </div>
           <div class="analytics-summary-grid" id="analyticsSummaryGrid">
             <div class="summary-mini-card">
@@ -339,9 +344,12 @@
         </div>
 
         <!-- Analytics Detailed Tables -->
-        <div class="glass-card analytics-tables-section">
-          <div class="section-toolbar">
+        <div class="glass-card analytics-tables-section" id="analyticsTablesSection">
+          <div class="section-toolbar" style="display: flex; justify-content: space-between; align-items: center;">
             <h3><i class="fa-solid fa-table"></i> Analytics & Statistics Tables</h3>
+            <button class="btn-toggle-section" id="toggleAnalyticsTablesBtn" type="button" title="Toggle Analytics Tables">
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
           </div>
           
           <div class="tables-grid">
@@ -415,9 +423,12 @@
           </div>
         </div>
 
-        <div class="glass-card active-users-panel">
-          <div class="section-toolbar">
+        <div class="glass-card active-users-panel" id="activeUsersSection">
+          <div class="section-toolbar" style="display: flex; justify-content: space-between; align-items: center;">
             <h3><i class="fa-solid fa-users"></i> Active Users</h3>
+            <button class="btn-toggle-section" id="toggleActiveUsersBtn" type="button" title="Toggle Active Users">
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
           </div>
           <div class="active-users-list" id="activeUsersList">
             <p class="muted-text">Loading active sessions...</p>
