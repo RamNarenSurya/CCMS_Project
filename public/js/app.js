@@ -761,12 +761,34 @@ document.addEventListener('DOMContentLoaded', () => {
       const stats = data.stats;
       state.stats = stats;
 
+      const totalSubmitted = stats.submitted + stats.under_review;
+      const totalInProgress = stats.in_progress + stats.assigned;
+      const totalResolvedClosed = stats.resolved + stats.closed;
+
       document.getElementById('admTotal').textContent = stats.total;
-      document.getElementById('admSubmitted').textContent = stats.submitted + stats.under_review;
-      document.getElementById('admInProgress').textContent = stats.in_progress + stats.assigned;
-      document.getElementById('admResolved').textContent = stats.resolved + stats.closed;
+      document.getElementById('admSubmitted').textContent = totalSubmitted;
+      document.getElementById('admInProgress').textContent = totalInProgress;
+      document.getElementById('admResolved').textContent = totalResolvedClosed;
       document.getElementById('admCritical').textContent = stats.critical;
       document.getElementById('admResolutionRate').textContent = `${stats.resolution_rate}%`;
+
+      const summaryEls = [
+        ['summaryTotalComplaints', stats.total],
+        ['summaryNewReview', totalSubmitted],
+        ['summaryInProgress', totalInProgress],
+        ['summaryResolvedClosed', totalResolvedClosed],
+        ['summaryCritical', stats.critical],
+        ['summaryTotalComplaintsTop', stats.total],
+        ['summaryNewReviewTop', totalSubmitted],
+        ['summaryInProgressTop', totalInProgress],
+        ['summaryResolvedClosedTop', totalResolvedClosed],
+        ['summaryCriticalTop', stats.critical]
+      ];
+
+      summaryEls.forEach(([id, value]) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value;
+      });
 
       const topCategory = stats.summaryRows && stats.summaryRows[0];
       document.getElementById('topCategoryLabel').textContent = topCategory ? `${topCategory.label} (${topCategory.count})` : 'N/A';

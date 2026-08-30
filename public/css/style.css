@@ -419,6 +419,41 @@ button, input, select, textarea {
   margin-bottom: 0;
 }
 
+.admin-inline-summary {
+  background: rgba(15, 23, 42, 0.45);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 14px 18px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow-glass);
+}
+
+.admin-inline-summary--top-gap {
+  margin-top: 16px;
+}
+
+.admin-inline-summary__label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.admin-inline-summary__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 18px;
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.admin-inline-summary__stats strong {
+  font-size: 15px;
+  color: var(--text-primary);
+}
+
 .metrics-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
