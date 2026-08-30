@@ -667,7 +667,88 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('monthlyTrendLabel').textContent = trendEntries.length
         ? `${trendEntries[trendEntries.length - 1][0]}: ${trendEntries[trendEntries.length - 1][1]}`
         : 'N/A';
+
+      // Populate Analytics Tables
+      populateAnalyticsTables(stats);
     } catch (err) {}
+  }
+
+  function populateAnalyticsTables(stats) {
+    // Category Breakdown Table
+    const categoryTable = document.getElementById('categoryBreakdownTable');
+    if (categoryTable && stats.by_category) {
+      const categories = Object.entries(stats.by_category).sort((a, b) => b[1] - a[1]);
+      categoryTable.innerHTML = categories.map(([category, count]) => {
+        const percentage = stats.total > 0 ? ((count / stats.total) * 100).toFixed(1) : 0;
+        return `
+          <tr>
+            <td>${escapeHtml(category)}</td>
+            <td><span class="table-count">${count}</span></td>
+            <td><span class="table-percentage">${percentage}%</span></td>
+          </tr>
+        `;
+      }).join('') || '<tr><td colspan="3" class="muted-text">No data available</td></tr>';
+    }
+
+    // Department Breakdown Table
+    const departmentTable = document.getElementById('departmentBreakdownTable');
+    if (departmentTable && stats.by_department) {
+      const departments = Object.entries(stats.by_department).sort((a, b) => b[1] - a[1]);
+      departmentTable.innerHTML = departments.map(([dept, count]) => {
+        const percentage = stats.total > 0 ? ((count / stats.total) * 100).toFixed(1) : 0;
+        return `
+          <tr>
+            <td>${escapeHtml(dept)}</td>
+            <td><span class="table-count">${count}</span></td>
+            <td><span class="table-percentage">${percentage}%</span></td>
+          </tr>
+        `;
+      }).join('') || '<tr><td colspan="3" class="muted-text">No data available</td></tr>';
+    }
+
+    // Priority Breakdown Table
+    const priorityTable = document.getElementById('priorityBreakdownTable');
+    if (priorityTable && stats.by_priority) {
+      const priorities = Object.entries(stats.by_priority).sort((a, b) => {
+        const order = { Critical: 0, High: 1, Medium: 2, Low: 3 };
+        return (order[a[0]] || 999) - (order[b[0]] || 999);
+      });
+      priorityTable.innerHTML = priorities.map(([priority, count]) => {
+        const percentage = stats.total > 0 ? ((count / stats.total) * 100).toFixed(1) : 0;
+        return `
+          <tr>
+            <td><span class="prio-${priority.toLowerCase()}">${priority}</span></td>
+            <td><span class="table-count">${count}</span></td>
+            <td><span class="table-percentage">${percentage}%</span></td>
+          </tr>
+        `;
+      }).join('') || '<tr><td colspan="3" class="muted-text">No data available</td></tr>';
+    }
+
+    // Status Breakdown Table
+    const statusTable = document.getElementById('statusBreakdownTable');
+    if (statusTable) {
+      const statuses = [
+        ['Submitted', stats.submitted],
+        ['Under Review', stats.under_review],
+        ['Assigned', stats.assigned],
+        ['In Progress', stats.in_progress],
+        ['Resolved', stats.resolved],
+        ['Closed', stats.closed]
+      ].filter(([, count]) => count > 0);
+
+      statusTable.innerHTML = statuses.map(([status, count]) => {
+        const percentage = stats.total > 0 ? ((count / stats.total) * 100).toFixed(1) : 0;
+        const statusClass = status.toLowerCase().replace(' ', '-');
+        return `
+          <tr>
+            <td><span class="status-${statusClass}">${status}</span></td>
+            <td><span class="table-count">${count}</span></td>
+            <td><span class="table-percentage">${percentage}%</span></td>
+          </tr>
+        `;
+      }).join('') || '<tr><td colspan="3" class="muted-text">No data available</td></tr>';
+    }
   }
 
   async function fetchActiveUsers() {
