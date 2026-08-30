@@ -11,8 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     adminComplaints: [],
     stats: null,
     currentDetailComplaint: null,
-    selectedRating: 5,
-    advancedFilters: {}
+    selectedRating: 5
   };
 
   // DOM Elements - Navigation & Auth
@@ -272,69 +271,6 @@ document.addEventListener('DOMContentLoaded', () => {
         closeModal(adminActionModal);
       }
     });
-
-    // Advanced Filters Panel Toggle
-    const toggleAdvFiltersBtn = document.getElementById('toggleAdvFiltersBtn');
-    const advancedFiltersPanel = document.getElementById('advancedFiltersPanel');
-    const collapseAdvFiltersBtn = document.getElementById('collapseAdvFiltersBtn');
-    const applyAdvFiltersBtn = document.getElementById('applyAdvFiltersBtn');
-    const resetAdvFiltersBtn = document.getElementById('resetAdvFiltersBtn');
-
-    if (toggleAdvFiltersBtn && advancedFiltersPanel) {
-      toggleAdvFiltersBtn.addEventListener('click', () => {
-        const isHidden = advancedFiltersPanel.style.display === 'none';
-        advancedFiltersPanel.style.display = isHidden ? 'block' : 'none';
-        toggleAdvFiltersBtn.textContent = isHidden 
-          ? '✕ Hide Advanced Filters' 
-          : '✓ Advanced Filters';
-      });
-    }
-
-    if (collapseAdvFiltersBtn && advancedFiltersPanel) {
-      collapseAdvFiltersBtn.addEventListener('click', () => {
-        advancedFiltersPanel.style.display = 'none';
-        if (toggleAdvFiltersBtn) toggleAdvFiltersBtn.textContent = '✓ Advanced Filters';
-      });
-    }
-
-    if (applyAdvFiltersBtn) {
-      applyAdvFiltersBtn.addEventListener('click', () => {
-        const dateFrom = document.getElementById('advDateFrom').value;
-        const dateTo = document.getElementById('advDateTo').value;
-        const assignedStaff = document.getElementById('advAssignedStaff').value;
-        const location = document.getElementById('advLocation').value;
-        const studentName = document.getElementById('advStudentName').value;
-        const studentID = document.getElementById('advStudentID').value;
-
-        state.advancedFilters = { dateFrom, dateTo, assignedStaff, location, studentName, studentID };
-        fetchAdminComplaints();
-        
-        const toast = document.createElement('div');
-        toast.className = 'toast toast-info';
-        toast.innerHTML = '<i class="fa-solid fa-check-circle"></i> Filters applied successfully!';
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 3000);
-      });
-    }
-
-    if (resetAdvFiltersBtn) {
-      resetAdvFiltersBtn.addEventListener('click', () => {
-        document.getElementById('advDateFrom').value = '';
-        document.getElementById('advDateTo').value = '';
-        document.getElementById('advAssignedStaff').value = '';
-        document.getElementById('advLocation').value = '';
-        document.getElementById('advStudentName').value = '';
-        document.getElementById('advStudentID').value = '';
-        state.advancedFilters = {};
-        fetchAdminComplaints();
-        
-        const toast = document.createElement('div');
-        toast.className = 'toast toast-info';
-        toast.innerHTML = '<i class="fa-solid fa-rotate-left"></i> Filters reset!';
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 3000);
-      });
-    }
   }
 
   // Helper Modal Functions
