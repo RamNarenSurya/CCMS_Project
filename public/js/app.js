@@ -93,6 +93,16 @@ document.addEventListener('DOMContentLoaded', () => {
     applyTheme(localStorage.getItem('theme') || 'dark');
     setupEventListeners();
 
+    // Check if this is a fresh page visit (sessionStorage cleared on browser close)
+    const isActiveSession = sessionStorage.getItem('activeSession') === 'true';
+
+    if (!isActiveSession) {
+      // Fresh visit - always show login
+      forceLoginView();
+      return;
+    }
+
+    // This is a refresh - restore session if token exists
     if (!state.token) {
       forceLoginView();
       return;
@@ -134,6 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
     state.user = null;
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    sessionStorage.removeItem('activeSession');
   }
 
   function applyTheme(theme) {
@@ -429,6 +440,7 @@ document.addEventListener('DOMContentLoaded', () => {
       state.user = data.user;
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
+      sessionStorage.setItem('activeSession', 'true');
 
       showToast(data.message, 'success');
       updateUserUI();
@@ -450,6 +462,7 @@ document.addEventListener('DOMContentLoaded', () => {
       state.user = data.user;
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
+      sessionStorage.setItem('activeSession', 'true');
 
       showToast(data.message, 'success');
       updateUserUI();
@@ -477,6 +490,7 @@ document.addEventListener('DOMContentLoaded', () => {
       state.user = data.user;
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
+      sessionStorage.setItem('activeSession', 'true');
 
       showToast('Registration successful! Welcome.', 'success');
       updateUserUI();
