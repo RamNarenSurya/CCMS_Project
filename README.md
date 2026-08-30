@@ -246,18 +246,56 @@ The system now tracks user login and logout events for the active session list.
 - `/api/auth/logout` removes the session from active tracking
 - Inactive sessions are automatically cleaned up every minute
 
-### 4. Deployment & live-site verification notes
+### 4. Profile & password management (Batch 1 / 2)
+Users can now update their profile information and change their password through a dedicated modal:
+
+- **Profile Update**: Change name and email (verified by current password)
+- **Password Change**: Secure password update with validation
+- **Access**: Available to all logged-in users via profile icon
+- Files updated: `public/js/app.js`, `server/routes/auth.js`, `public/index.html`
+
+### 5. Dark mode / Light mode theme toggle (Batch 2)
+A theme toggle has been added to the top-right of the dashboard:
+
+- **Dark Mode** (default): Easy on the eyes for extended sessions
+- **Light Mode**: Traditional bright interface
+- **Persistence**: Theme preference is saved to localStorage
+- Session history and active users panels styled for both themes
+- CSS variables enable quick theme switching via `body.light-theme` class
+
+### 6. Live session tracking & history (Batch 2)
+Admins can now see detailed session activity logs:
+
+- **Active Users Panel**: Real-time list of logged-in users with role and last-seen time
+- **Session History**: Complete login/logout history with timestamps
+- **Session Summary**: Quick stats on today's sessions and user activity
+- Auto-cleanup: Stale sessions removed after 15 minutes of inactivity
+- Files updated: `server/routes/admin.js`, `public/index.html`, `public/js/app.js`
+
+### 7. Admin analytics dashboard (Batch 3)
+Enhanced analytics and reporting for system administrators:
+
+- **Resolution Rate**: Percentage of resolved/closed complaints
+- **Department Breakdown**: Distribution of complaints by department
+- **Category Summary**: Top complaint categories with counts
+- **Priority Stats**: Critical and high-priority issue counts
+- **Monthly Trends**: Complaint volume by month
+- **Top Categories**: Quick view of most common complaint types
+- API endpoint: `GET /api/stats` (enhanced with `summaryRows` and `monthlyTrend`)
+- Files updated: `server/routes/stats.js`, `public/index.html`, `public/js/app.js`
+
+### 8. Deployment & live-site verification notes
 The project is deployment-ready with the latest code updates and live site verification workflow.
 
 Deployment checklist:
 1. Save code changes
-2. Commit project updates
+2. Commit project updates with descriptive messages (e.g., "Add Batch 3: Admin analytics")
 3. Push to the remote repository
-4. Trigger deployment or restart the server
-5. Refresh the live site
-6. Open browser DevTools → Application → Local Storage
-7. Check `user` and `token` to confirm the current logged-in user
-8. Log in as an admin and open the `Active Users` panel to confirm the current session list
+4. Render webhook auto-triggers deployment
+5. Wait 30-60 seconds for Render service to boot (free tier wakes up from hibernation)
+6. Refresh the live site
+7. Test features: Login as admin → view active users, session history, and analytics dashboard
+8. Verify theme toggle and profile modal work correctly
 
 ### 5. Deployment options for production
 Use any Node.js hosting platform to deploy the backend and serve the static frontend included in `public/`.
