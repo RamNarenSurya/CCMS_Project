@@ -768,15 +768,6 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('admCritical').textContent = stats.critical;
       document.getElementById('admResolutionRate').textContent = `${stats.resolution_rate}%`;
 
-      const chipsContainer = document.getElementById('deptSummaryChips');
-      chipsContainer.innerHTML = '';
-      Object.entries(stats.by_department).forEach(([dept, count]) => {
-        const chip = document.createElement('span');
-        chip.className = 'summary-chip';
-        chip.innerHTML = `${dept}: <strong>${count}</strong>`;
-        chipsContainer.appendChild(chip);
-      });
-
       const topCategory = stats.summaryRows && stats.summaryRows[0];
       document.getElementById('topCategoryLabel').textContent = topCategory ? `${topCategory.label} (${topCategory.count})` : 'N/A';
       document.getElementById('criticalSummaryLabel').textContent = stats.critical || 0;
