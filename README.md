@@ -228,14 +228,15 @@ The default seeded accounts were standardized so the main admin and staff identi
 
 This change is reflected in the default database seed data and is used in the demo login flows.
 
-### 2. Admin active-user tracking
-An admin-side active sessions block was added to the dashboard so the admin can view the list of currently logged-in users.
+### 2. Admin-only active-user tracking
+An admin-side active sessions block was added to the dashboard so only admin/staff users with elevated access can view the list of currently logged-in users.
 
 - Server-side session tracking is managed in `server/routes/auth.js`
 - Admin API endpoint: `GET /api/admin/active-users`
 - Dashboard UI: `Active Users` section in the admin panel
+- Stale sessions auto-expire after 15 minutes of inactivity to keep the list accurate
 
-This lets admins view who is currently signed in with their role and most recent activity timestamp.
+This lets admins view who is currently signed in, along with their role and last-seen activity timestamp.
 
 ### 3. Login/logout session management
 The system now tracks user login and logout events for the active session list.
@@ -243,9 +244,10 @@ The system now tracks user login and logout events for the active session list.
 - Login registers the user in the active session list
 - `/api/auth/me` refreshes last-seen activity
 - `/api/auth/logout` removes the session from active tracking
+- Inactive sessions are automatically cleaned up every minute
 
 ### 4. Deployment & live-site verification notes
-The project is deployment-ready with the latest code pushed and redeployed as needed.
+The project is deployment-ready with the latest code updates and live site verification workflow.
 
 Deployment checklist:
 1. Save code changes
@@ -255,8 +257,25 @@ Deployment checklist:
 5. Refresh the live site
 6. Open browser DevTools → Application → Local Storage
 7. Check `user` and `token` to confirm the current logged-in user
+8. Log in as an admin and open the `Active Users` panel to confirm the current session list
 
-### 5. How to verify who is logged in
+### 5. Deployment options for production
+Use any Node.js hosting platform to deploy the backend and serve the static frontend included in `public/`.
+
+Common choices:
+- Render
+- Railway
+- Vercel (for frontend) + Node hosting for API
+- DigitalOcean App Platform
+- VPS with PM2 or Nginx
+
+Recommended production setup:
+- Set `PORT` from the hosting environment
+- Add a secure `JWT_SECRET`
+- Add a valid `MONGODB_URI`
+- Add `GEMINI_API_KEY` if AI features are enabled
+
+### 6. How to verify who is logged in
 After logging into the live app:
 
 1. Open browser DevTools

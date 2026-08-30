@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const { readDB, writeDB } = require('../db');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'college_complaint_mgmt_secret_key_2026';
+const ACTIVE_SESSION_TIMEOUT_MS = 15 * 60 * 1000;
 
 const activeUsers = new Map();
 
@@ -33,9 +34,22 @@ function removeUserActive(userId) {
   activeUsers.delete(userId);
 }
 
+function cleanupInactiveUsers() {
+  const now = Date.now();
+  for (const [userId, user] of activeUsers.entries()) {
+    const lastSeen = new Date(user.lastSeen).getTime();
+    if (now - lastSeen > ACTIVE_SESSION_TIMEOUT_MS) {
+      activeUsers.delete(userId);
+    }
+  }
+}
+
 function getActiveUsers() {
+  cleanupInactiveUsers();
   return Array.from(activeUsers.values()).sort((a, b) => new Date(b.lastSeen) - new Date(a.lastSeen));
 }
+
+setInterval(cleanupInactiveUsers, 60 * 1000);
 
 module.exports = router;
 module.exports.sanitizeUser = sanitizeUser;
