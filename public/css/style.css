@@ -401,9 +401,9 @@ button, input, select, textarea {
   background: rgba(99, 102, 241, 0.12);
   border: 1px solid rgba(99, 102, 241, 0.3);
   color: var(--text-primary);
-  padding: 9px 14px;
+  padding: 6px 12px;
   border-radius: 999px;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   cursor: pointer;
   transition: var(--transition);
@@ -415,8 +415,9 @@ button, input, select, textarea {
 }
 
 .admin-section-list-bottom {
-  margin-top: 24px;
+  margin-top: 16px;
   margin-bottom: 0;
+  gap: 6px;
 }
 
 .admin-inline-summary {
