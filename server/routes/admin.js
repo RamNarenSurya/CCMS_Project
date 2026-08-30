@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const { readDB, writeDB } = require('../db');
-const { getActiveUsers } = require('./auth');
+const { getActiveUsers, getSessionSummary } = require('./auth');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'college_complaint_mgmt_secret_key_2026';
 
@@ -32,6 +32,15 @@ router.get('/active-users', requireAdminOrStaff, (req, res) => {
     success: true,
     count: users.length,
     users
+  });
+});
+
+router.get('/session-history', requireAdminOrStaff, (req, res) => {
+  const summary = getSessionSummary();
+  res.json({
+    success: true,
+    summary,
+    history: summary.recentSessions
   });
 });
 

@@ -50,6 +50,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Admin Dashboard Elements
   const adminRoleDisplay = document.getElementById('adminRoleDisplay');
   const activeUsersList = document.getElementById('activeUsersList');
+  const sessionSummary = document.getElementById('sessionSummary');
+  const sessionHistoryList = document.getElementById('sessionHistoryList');
   const adminComplaintsTableBody = document.getElementById('adminComplaintsTableBody');
   const admSearchInput = document.getElementById('admSearchInput');
   const admStatusFilter = document.getElementById('admStatusFilter');
@@ -392,6 +394,7 @@ document.addEventListener('DOMContentLoaded', () => {
       fetchAdminComplaints();
       fetchAdminStats();
       fetchActiveUsers();
+      fetchSessionHistory();
     } else {
       adminDashboard.style.display = 'none';
       studentDashboard.style.display = 'block';
@@ -603,6 +606,61 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (err) {
       if (activeUsersList) {
         activeUsersList.innerHTML = '<p class="muted-text">Unable to load active users.</p>';
+      }
+    }
+  }
+
+  async function fetchSessionHistory() {
+    try {
+      const data = await apiCall('/api/admin/session-history');
+      const summary = data.summary || {};
+      const history = data.history || [];
+
+      if (sessionSummary) {
+        sessionSummary.innerHTML = `
+          <div class="session-stat-grid">
+            <div class="session-stat-box">
+              <span class="stat-label">Active now</span>
+              <strong>${summary.activeUsers || 0}</strong>
+            </div>
+            <div class="session-stat-box">
+              <span class="stat-label">Closed</span>
+              <strong>${summary.closedSessions || 0}</strong>
+            </div>
+            <div class="session-stat-box">
+              <span class="stat-label">Total sessions</span>
+              <strong>${summary.totalSessions || 0}</strong>
+            </div>
+          </div>
+        `;
+      }
+
+      if (sessionHistoryList) {
+        if (!history.length) {
+          sessionHistoryList.innerHTML = '<p class="muted-text">No login activity recorded yet.</p>';
+          return;
+        }
+
+        sessionHistoryList.innerHTML = history.map(entry => `
+          <div class="session-history-item">
+            <div>
+              <strong>${escapeHtml(entry.name)}</strong>
+              <span>${escapeHtml(entry.email)}</span>
+            </div>
+            <div class="session-meta">
+              <span class="user-pill ${entry.role.toLowerCase()}">${entry.role}</span>
+              <span>${entry.status === 'active' ? 'Logged in' : 'Closed'}</span>
+            </div>
+            <small>${entry.status === 'active' ? `Last seen: ${new Date(entry.lastSeen).toLocaleString()}` : `Closed: ${new Date(entry.logoutAt || entry.lastSeen).toLocaleString()}`}</small>
+          </div>
+        `).join('');
+      }
+    } catch (err) {
+      if (sessionSummary) {
+        sessionSummary.innerHTML = '<p class="muted-text">Unable to load session history.</p>';
+      }
+      if (sessionHistoryList) {
+        sessionHistoryList.innerHTML = '<p class="muted-text">No session history available.</p>';
       }
     }
   }

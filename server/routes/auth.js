@@ -7,6 +7,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'college_complaint_mgmt_secret_key_
 const ACTIVE_SESSION_TIMEOUT_MS = 15 * 60 * 1000;
 
 const activeUsers = new Map();
+const sessionHistory = new Map();
 
 function sanitizeUser(user) {
   const { password, ...rest } = user;
@@ -15,10 +16,34 @@ function sanitizeUser(user) {
 
 function markUserActive(user) {
   const cleanUser = sanitizeUser(user);
+  const now = new Date().toISOString();
+
+  const session = sessionHistory.get(user.id) || {
+    userId: user.id,
+    name: cleanUser.name,
+    email: cleanUser.email,
+    role: cleanUser.role,
+    loginAt: now,
+    lastSeen: now,
+    logoutAt: null,
+    status: 'active'
+  };
+
+  session.name = cleanUser.name;
+  session.email = cleanUser.email;
+  session.role = cleanUser.role;
+  session.lastSeen = now;
+  session.status = 'active';
+  session.logoutAt = null;
+  if (!session.loginAt) {
+    session.loginAt = now;
+  }
+  sessionHistory.set(user.id, session);
+
   activeUsers.set(user.id, {
     ...cleanUser,
-    loggedInAt: new Date().toISOString(),
-    lastSeen: new Date().toISOString()
+    loggedInAt: session.loginAt,
+    lastSeen: session.lastSeen
   });
   return activeUsers.get(user.id);
 }
@@ -27,10 +52,23 @@ function touchUserActivity(userId) {
   if (!userId || !activeUsers.has(userId)) return null;
   const user = activeUsers.get(userId);
   user.lastSeen = new Date().toISOString();
+
+  const session = sessionHistory.get(userId);
+  if (session) {
+    session.lastSeen = user.lastSeen;
+    session.status = 'active';
+    session.logoutAt = null;
+  }
   return user;
 }
 
 function removeUserActive(userId) {
+  const session = sessionHistory.get(userId);
+  if (session) {
+    session.logoutAt = new Date().toISOString();
+    session.status = 'closed';
+    session.lastSeen = session.logoutAt;
+  }
   activeUsers.delete(userId);
 }
 
@@ -39,7 +77,7 @@ function cleanupInactiveUsers() {
   for (const [userId, user] of activeUsers.entries()) {
     const lastSeen = new Date(user.lastSeen).getTime();
     if (now - lastSeen > ACTIVE_SESSION_TIMEOUT_MS) {
-      activeUsers.delete(userId);
+      removeUserActive(userId);
     }
   }
 }
@@ -47,6 +85,26 @@ function cleanupInactiveUsers() {
 function getActiveUsers() {
   cleanupInactiveUsers();
   return Array.from(activeUsers.values()).sort((a, b) => new Date(b.lastSeen) - new Date(a.lastSeen));
+}
+
+function getSessionHistory() {
+  cleanupInactiveUsers();
+  return Array.from(sessionHistory.values()).sort((a, b) => {
+    const bTime = new Date(b.lastSeen || b.loginAt).getTime();
+    const aTime = new Date(a.lastSeen || a.loginAt).getTime();
+    return bTime - aTime;
+  });
+}
+
+function getSessionSummary() {
+  const history = getSessionHistory();
+  const activeUsersCount = getActiveUsers().length;
+  return {
+    activeUsers: activeUsersCount,
+    totalSessions: history.length,
+    closedSessions: history.filter(session => session.status === 'closed').length,
+    recentSessions: history.slice(0, 8)
+  };
 }
 
 setInterval(cleanupInactiveUsers, 60 * 1000);
@@ -57,6 +115,8 @@ module.exports.markUserActive = markUserActive;
 module.exports.touchUserActivity = touchUserActivity;
 module.exports.removeUserActive = removeUserActive;
 module.exports.getActiveUsers = getActiveUsers;
+module.exports.getSessionHistory = getSessionHistory;
+module.exports.getSessionSummary = getSessionSummary;
 
 // POST /api/auth/register
 router.post('/register', (req, res) => {
