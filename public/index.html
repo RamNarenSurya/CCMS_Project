@@ -510,6 +510,66 @@
             </table>
           </div>
         </div>
+
+        <!-- Advanced Filters Panel (Collapsible) -->
+        <div class="glass-card advanced-filters-panel" id="advancedFiltersPanel" style="display:none;">
+          <div class="filters-header">
+            <h3><i class="fa-solid fa-filter"></i> Advanced Search & Filters</h3>
+            <button class="btn-collapse" id="collapseAdvFiltersBtn" type="button">
+              <i class="fa-solid fa-chevron-up"></i>
+            </button>
+          </div>
+
+          <div class="filters-content">
+            <div class="filters-grid">
+              <div class="filter-group">
+                <label for="advDateFrom">Date From:</label>
+                <input type="date" id="advDateFrom">
+              </div>
+
+              <div class="filter-group">
+                <label for="advDateTo">Date To:</label>
+                <input type="date" id="advDateTo">
+              </div>
+
+              <div class="filter-group">
+                <label for="advAssignedStaff">Assigned Staff:</label>
+                <input type="text" id="advAssignedStaff" placeholder="Filter by staff name...">
+              </div>
+
+              <div class="filter-group">
+                <label for="advLocation">Location:</label>
+                <input type="text" id="advLocation" placeholder="Search location...">
+              </div>
+
+              <div class="filter-group">
+                <label for="advStudentName">Student Name:</label>
+                <input type="text" id="advStudentName" placeholder="Filter by student...">
+              </div>
+
+              <div class="filter-group">
+                <label for="advStudentID">Student ID:</label>
+                <input type="text" id="advStudentID" placeholder="Filter by ID...">
+              </div>
+            </div>
+
+            <div class="filter-actions">
+              <button class="btn btn-primary" id="applyAdvFiltersBtn">
+                <i class="fa-solid fa-magnifying-glass"></i> Apply Filters
+              </button>
+              <button class="btn btn-outline" id="resetAdvFiltersBtn">
+                <i class="fa-solid fa-rotate-left"></i> Reset All
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Advanced Filters Toggle Button -->
+        <div class="advanced-filters-toggle">
+          <button class="btn btn-outline" id="toggleAdvFiltersBtn" type="button">
+            <i class="fa-solid fa-sliders"></i> Advanced Filters
+          </button>
+        </div>
       </section>
 
     </div>
