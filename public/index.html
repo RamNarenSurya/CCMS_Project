@@ -310,6 +310,81 @@
           </div>
         </div>
 
+        <!-- Admin Complaints Master Table -->
+        <div class="glass-card table-section">
+          <div class="section-toolbar">
+            <h3><i class="fa-solid fa-sliders"></i> Master Complaint Management</h3>
+            <div class="toolbar-actions grid-actions">
+              <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="admSearchInput" placeholder="Search ID, Student, Title...">
+              </div>
+
+              <select id="admStatusFilter" class="select-input">
+                <option value="All">All Statuses</option>
+                <option value="Submitted">Submitted</option>
+                <option value="Under Review">Under Review</option>
+                <option value="Assigned">Assigned</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Resolved">Resolved</option>
+                <option value="Closed">Closed</option>
+              </select>
+
+              <select id="admCategoryFilter" class="select-input">
+                <option value="All">All Categories</option>
+                <option value="Classroom">Classroom</option>
+                <option value="Laboratory">Laboratory</option>
+                <option value="Hostel">Hostel</option>
+                <option value="Wi-Fi / Internet">Wi-Fi / Internet</option>
+                <option value="Infrastructure">Infrastructure</option>
+                <option value="Transportation">Transportation</option>
+                <option value="Cleanliness">Cleanliness</option>
+                <option value="Electricity">Electricity</option>
+                <option value="Water Supply">Water Supply</option>
+                <option value="Library">Library</option>
+                <option value="Security">Security</option>
+              </select>
+
+              <select id="admPriorityFilter" class="select-input">
+                <option value="All">All Priorities</option>
+                <option value="Critical">Critical</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+              </select>
+
+              <select id="admDepartmentFilter" class="select-input">
+                <option value="All">All Departments</option>
+                <option value="IT Department">IT Department</option>
+                <option value="Maintenance Department">Maintenance Dept</option>
+                <option value="Hostel Facilities Department">Hostel Dept</option>
+                <option value="Transport Department">Transport Dept</option>
+                <option value="Campus Security & Cleanliness">Security & Cleanliness</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Student Info</th>
+                  <th>Complaint Title & Category</th>
+                  <th>Location</th>
+                  <th>Assigned Dept / Staff</th>
+                  <th>Priority</th>
+                  <th>Status</th>
+                  <th>Quick Actions</th>
+                </tr>
+              </thead>
+              <tbody id="adminComplaintsTableBody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
         <!-- Analytics Detailed Tables -->
         <div class="glass-card analytics-tables-section" id="analyticsTablesSection">
           <div class="section-toolbar" style="display: flex; justify-content: space-between; align-items: center;">
@@ -318,9 +393,8 @@
               <i class="fa-solid fa-chevron-down"></i>
             </button>
           </div>
-          
+
           <div class="tables-grid">
-            <!-- Category Breakdown Table -->
             <div class="analytics-table-wrapper">
               <h4>📋 Complaints by Category</h4>
               <table class="analytics-table">
@@ -337,7 +411,6 @@
               </table>
             </div>
 
-            <!-- Department Distribution Table -->
             <div class="analytics-table-wrapper">
               <h4>🏢 Complaints by Department</h4>
               <table class="analytics-table">
@@ -354,7 +427,6 @@
               </table>
             </div>
 
-            <!-- Priority Distribution Table -->
             <div class="analytics-table-wrapper">
               <h4>⚡ Complaints by Priority</h4>
               <table class="analytics-table">
@@ -371,7 +443,6 @@
               </table>
             </div>
 
-            <!-- Status Distribution Table -->
             <div class="analytics-table-wrapper">
               <h4>✅ Complaints by Status</h4>
               <table class="analytics-table">
@@ -456,81 +527,6 @@
               <span>Monthly Trend</span>
               <strong id="monthlyTrendLabel">-</strong>
             </div>
-          </div>
-        </div>
-
-        <!-- Admin Complaints Master Table -->
-        <div class="glass-card table-section">
-          <div class="section-toolbar">
-            <h3><i class="fa-solid fa-sliders"></i> Master Complaint Management</h3>
-            <div class="toolbar-actions grid-actions">
-              <div class="search-box">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" id="admSearchInput" placeholder="Search ID, Student, Title...">
-              </div>
-
-              <select id="admStatusFilter" class="select-input">
-                <option value="All">All Statuses</option>
-                <option value="Submitted">Submitted</option>
-                <option value="Under Review">Under Review</option>
-                <option value="Assigned">Assigned</option>
-                <option value="In Progress">In Progress</option>
-                <option value="Resolved">Resolved</option>
-                <option value="Closed">Closed</option>
-              </select>
-
-              <select id="admCategoryFilter" class="select-input">
-                <option value="All">All Categories</option>
-                <option value="Classroom">Classroom</option>
-                <option value="Laboratory">Laboratory</option>
-                <option value="Hostel">Hostel</option>
-                <option value="Wi-Fi / Internet">Wi-Fi / Internet</option>
-                <option value="Infrastructure">Infrastructure</option>
-                <option value="Transportation">Transportation</option>
-                <option value="Cleanliness">Cleanliness</option>
-                <option value="Electricity">Electricity</option>
-                <option value="Water Supply">Water Supply</option>
-                <option value="Library">Library</option>
-                <option value="Security">Security</option>
-              </select>
-
-              <select id="admPriorityFilter" class="select-input">
-                <option value="All">All Priorities</option>
-                <option value="Critical">Critical</option>
-                <option value="High">High</option>
-                <option value="Medium">Medium</option>
-                <option value="Low">Low</option>
-              </select>
-
-              <select id="admDepartmentFilter" class="select-input">
-                <option value="All">All Departments</option>
-                <option value="IT Department">IT Department</option>
-                <option value="Maintenance Department">Maintenance Dept</option>
-                <option value="Hostel Facilities Department">Hostel Dept</option>
-                <option value="Transport Department">Transport Dept</option>
-                <option value="Campus Security & Cleanliness">Security & Cleanliness</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="table-responsive">
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Student Info</th>
-                  <th>Complaint Title & Category</th>
-                  <th>Location</th>
-                  <th>Assigned Dept / Staff</th>
-                  <th>Priority</th>
-                  <th>Status</th>
-                  <th>Quick Actions</th>
-                </tr>
-              </thead>
-              <tbody id="adminComplaintsTableBody">
-                <!-- Dynamically populated -->
-              </tbody>
-            </table>
           </div>
         </div>
 
