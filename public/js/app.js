@@ -5,8 +5,8 @@
 document.addEventListener('DOMContentLoaded', () => {
   // Global State Store
   const state = {
-    token: localStorage.getItem('token') || null,
-    user: JSON.parse(localStorage.getItem('user') || 'null'),
+    token: null,
+    user: null,
     studentComplaints: [],
     adminComplaints: [],
     stats: null,
@@ -89,32 +89,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize Application
   init();
 
-  async function init() {
+  function init() {
     applyTheme(localStorage.getItem('theme') || 'dark');
     setupEventListeners();
-
-    if (!state.token) {
-      forceLoginView();
-      return;
-    }
-
-    if (!state.user) {
-      try {
-        const data = await apiCall('/api/auth/me');
-        state.user = data.user;
-        localStorage.setItem('user', JSON.stringify(data.user));
-        updateUserUI();
-        loadRoleDashboard();
-        return;
-      } catch (err) {
-        clearSession();
-        forceLoginView();
-        return;
-      }
-    }
-
-    updateUserUI();
-    loadRoleDashboard();
+    clearSession();
+    forceLoginView();
   }
 
   function forceLoginView() {
