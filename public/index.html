@@ -267,6 +267,12 @@
           </div>
         </div>
 
+        <div class="admin-section-list">
+          <button class="section-list-btn" type="button" data-target="analyticsTablesSection">Analytics & Statistics Tables</button>
+          <button class="section-list-btn" type="button" data-target="activeUsersSection">Active Users</button>
+          <button class="section-list-btn" type="button" data-target="sessionActivitySection">Session Activity</button>
+        </div>
+
         <!-- Admin Metrics Overview -->
         <div class="metrics-grid">
           <div class="glass-card metric-card card-total">
@@ -435,15 +441,20 @@
           </div>
         </div>
 
-        <div class="glass-card session-panel">
-          <div class="section-toolbar">
+        <div class="glass-card session-panel" id="sessionActivitySection">
+          <div class="section-toolbar" style="display: flex; justify-content: space-between; align-items: center;">
             <h3><i class="fa-solid fa-clock-rotate-left"></i> Session Activity</h3>
+            <button class="btn-toggle-section" id="toggleSessionActivityBtn" type="button" title="Toggle Session Activity">
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
           </div>
-          <div class="session-summary" id="sessionSummary">
-            <p class="muted-text">Loading session summary...</p>
-          </div>
-          <div class="session-history-list" id="sessionHistoryList">
-            <p class="muted-text">Loading session history...</p>
+          <div class="session-content">
+            <div class="session-summary" id="sessionSummary">
+              <p class="muted-text">Loading session summary...</p>
+            </div>
+            <div class="session-history-list" id="sessionHistoryList">
+              <p class="muted-text">Loading session history...</p>
+            </div>
           </div>
         </div>
 
@@ -520,6 +531,12 @@
               </tbody>
             </table>
           </div>
+        </div>
+
+        <div class="admin-section-list admin-section-list-bottom">
+          <button class="section-list-btn" type="button" data-target="analyticsTablesSection">Analytics & Statistics Tables</button>
+          <button class="section-list-btn" type="button" data-target="activeUsersSection">Active Users</button>
+          <button class="section-list-btn" type="button" data-target="sessionActivitySection">Session Activity</button>
         </div>
       </section>
 

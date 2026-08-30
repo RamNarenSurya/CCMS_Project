@@ -89,15 +89,51 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize Application
   init();
 
-  function init() {
+  async function init() {
     applyTheme(localStorage.getItem('theme') || 'dark');
     setupEventListeners();
-    if (state.token && state.user) {
-      updateUserUI();
-      loadRoleDashboard();
-    } else {
-      showAuthCard('login');
+
+    if (!state.token) {
+      forceLoginView();
+      return;
     }
+
+    if (!state.user) {
+      try {
+        const data = await apiCall('/api/auth/me');
+        state.user = data.user;
+        localStorage.setItem('user', JSON.stringify(data.user));
+        updateUserUI();
+        loadRoleDashboard();
+        return;
+      } catch (err) {
+        clearSession();
+        forceLoginView();
+        return;
+      }
+    }
+
+    updateUserUI();
+    loadRoleDashboard();
+  }
+
+  function forceLoginView() {
+    const loggedInLabel = document.getElementById('loggedInLabel');
+    if (loggedInLabel) loggedInLabel.style.display = 'none';
+
+    if (userInfoDisplay) userInfoDisplay.style.display = 'none';
+    if (authNavButtons) authNavButtons.style.display = 'flex';
+    if (studentDashboard) studentDashboard.style.display = 'none';
+    if (adminDashboard) adminDashboard.style.display = 'none';
+
+    showAuthCard('login');
+  }
+
+  function clearSession() {
+    state.token = null;
+    state.user = null;
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
   }
 
   function applyTheme(theme) {
@@ -279,6 +315,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const activeUsersSection = document.getElementById('activeUsersSection');
     const toggleAnalyticsTablesBtn = document.getElementById('toggleAnalyticsTablesBtn');
     const analyticsTablesSection = document.getElementById('analyticsTablesSection');
+    const toggleSessionActivityBtn = document.getElementById('toggleSessionActivityBtn');
+    const sessionActivitySection = document.getElementById('sessionActivitySection');
 
     // Helper function to toggle section visibility
     function toggleSectionVisibility(btn, section, contentSelector) {
@@ -318,6 +356,43 @@ document.addEventListener('DOMContentLoaded', () => {
         toggleSectionVisibility(toggleAnalyticsTablesBtn, analyticsTablesSection, '.tables-grid');
       }
     }
+
+    if (sessionActivitySection) {
+      const sessionContent = sessionActivitySection.querySelector('.session-content');
+      if (sessionContent) {
+        sessionContent.classList.add('section-content-visible');
+        toggleSectionVisibility(toggleSessionActivityBtn, sessionActivitySection, '.session-content');
+      }
+    }
+
+    document.querySelectorAll('.section-list-btn').forEach((button) => {
+      button.addEventListener('click', () => {
+        const targetId = button.getAttribute('data-target');
+        const target = document.getElementById(targetId);
+        if (!target) return;
+
+        const toggleButton = target.querySelector('.btn-toggle-section');
+        if (toggleButton) {
+          const content = target.querySelector('.section-content-visible, .analytics-summary-grid, .tables-grid, .active-users-list, .session-content');
+          const isOpen = content && !toggleButton.classList.contains('collapsed');
+          if (isOpen) {
+            toggleButton.classList.add('collapsed');
+            if (content) {
+              content.classList.remove('section-content-visible');
+              content.classList.add('section-content-hidden');
+            }
+          } else {
+            toggleButton.classList.remove('collapsed');
+            if (content) {
+              content.classList.remove('section-content-hidden');
+              content.classList.add('section-content-visible');
+            }
+          }
+        }
+
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
   }
 
   // Helper Modal Functions
@@ -416,18 +491,15 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     } catch (err) {}
 
-    state.token = null;
-    state.user = null;
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    clearSession();
 
     const loggedInLabel = document.getElementById('loggedInLabel');
     if (loggedInLabel) loggedInLabel.style.display = 'none';
 
-    userInfoDisplay.style.display = 'none';
-    authNavButtons.style.display = 'flex';
-    studentDashboard.style.display = 'none';
-    adminDashboard.style.display = 'none';
+    if (userInfoDisplay) userInfoDisplay.style.display = 'none';
+    if (authNavButtons) authNavButtons.style.display = 'flex';
+    if (studentDashboard) studentDashboard.style.display = 'none';
+    if (adminDashboard) adminDashboard.style.display = 'none';
 
     showAuthCard('login');
     showToast('Logged out successfully.', 'info');
