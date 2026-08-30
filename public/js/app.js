@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const demoAdminBtn = document.getElementById('demoAdminBtn');
   const demoStaffBtn = document.getElementById('demoStaffBtn');
   const demoLoginBar = document.querySelector('.demo-login-bar');
+  const themeToggle = document.getElementById('themeToggle');
   const isDemoMode = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
   // View Containers
@@ -81,6 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
   init();
 
   function init() {
+    applyTheme(localStorage.getItem('theme') || 'dark');
     setupEventListeners();
     if (state.token && state.user) {
       updateUserUI();
@@ -88,6 +90,20 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       showAuthCard('login');
     }
+  }
+
+  function applyTheme(theme) {
+    const isLight = theme === 'light';
+    document.body.classList.toggle('light-theme', isLight);
+    document.body.classList.toggle('dark-theme', !isLight);
+    if (themeToggle) {
+      const icon = themeToggle.querySelector('i');
+      if (icon) {
+        icon.className = isLight ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+      }
+      themeToggle.setAttribute('aria-label', isLight ? 'Switch to dark mode' : 'Switch to light mode');
+    }
+    localStorage.setItem('theme', theme);
   }
 
   // API Fetch Helper
@@ -158,6 +174,13 @@ document.addEventListener('DOMContentLoaded', () => {
     loginForm.addEventListener('submit', handleLogin);
     registerForm.addEventListener('submit', handleRegister);
     logoutBtn.addEventListener('click', handleLogout);
+
+    if (themeToggle) {
+      themeToggle.addEventListener('click', () => {
+        const nextTheme = document.body.classList.contains('light-theme') ? 'dark' : 'light';
+        applyTheme(nextTheme);
+      });
+    }
 
     // Quick Demo Buttons (only enabled in local demo mode)
     if (isDemoMode) {

@@ -10,6 +10,8 @@
   --bg-card-hover: rgba(30, 41, 59, 0.9);
   --border-color: rgba(255, 255, 255, 0.1);
   --border-highlight: rgba(99, 102, 241, 0.3);
+  --header-bg: rgba(15, 23, 42, 0.85);
+  --app-bg: radial-gradient(circle at 15% 15%, #1e1b4b 0%, #0f172a 50%, #020617 100%);
 
   /* Typography */
   --font-family: 'Plus Jakarta Sans', 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -55,12 +57,28 @@
 
 body {
   font-family: var(--font-family);
-  background: radial-gradient(circle at 15% 15%, #1e1b4b 0%, #0f172a 50%, #020617 100%);
+  background: var(--app-bg);
   background-attachment: fixed;
   color: var(--text-primary);
   line-height: 1.6;
   min-height: 100vh;
   overflow-x: hidden;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+body.light-theme {
+  --bg-primary: #f3f6fb;
+  --bg-secondary: #e2e8f0;
+  --bg-card: rgba(255, 255, 255, 0.82);
+  --bg-card-hover: rgba(255, 255, 255, 0.96);
+  --border-color: rgba(15, 23, 42, 0.08);
+  --border-highlight: rgba(99, 102, 241, 0.24);
+  --header-bg: rgba(255, 255, 255, 0.8);
+  --app-bg: radial-gradient(circle at 15% 15%, #dfe7ff 0%, #f8fafc 45%, #eef2ff 100%);
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --shadow-glass: 0 8px 32px 0 rgba(15, 23, 42, 0.12);
 }
 
 a {
@@ -103,7 +121,7 @@ button, input, select, textarea {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(15, 23, 42, 0.85);
+  background: var(--header-bg);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border-color);
 }
@@ -200,6 +218,25 @@ button, input, select, textarea {
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+.theme-toggle {
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.theme-toggle:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-highlight);
 }
 
 .user-info {
