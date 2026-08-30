@@ -449,6 +449,35 @@
           </div>
         </div>
 
+        <div class="glass-card analytics-panel" id="resolutionRateSection" style="margin-top: 20px;">
+          <div class="analytics-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <h4><i class="fa-solid fa-chart-pie"></i> Resolution Rate: <span id="admResolutionRate" class="text-gradient">0%</span></h4>
+            </div>
+            <button class="btn-toggle-section" id="toggleResolutionRateBtn" type="button" title="Toggle Resolution Rate">
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+          </div>
+          <div class="analytics-summary-grid" id="analyticsSummaryGrid">
+            <div class="summary-mini-card">
+              <span>Top Categories</span>
+              <strong id="topCategoryLabel">-</strong>
+            </div>
+            <div class="summary-mini-card">
+              <span>Critical Count</span>
+              <strong id="criticalSummaryLabel">0</strong>
+            </div>
+            <div class="summary-mini-card">
+              <span>High Priority</span>
+              <strong id="highPrioritySummaryLabel">0</strong>
+            </div>
+            <div class="summary-mini-card">
+              <span>Monthly Trend</span>
+              <strong id="monthlyTrendLabel">-</strong>
+            </div>
+          </div>
+        </div>
+
         <!-- Admin Complaints Master Table -->
         <div class="glass-card table-section">
           <div class="section-toolbar">
